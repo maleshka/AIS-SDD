@@ -1,0 +1,88 @@
+# Mapping contractu API-Tickets na IDs špecifikácie (DESIGN_CONTRACT, AGENTS.md kap. 8 bod 5).
+
+contract:
+  id: "API-Tickets"
+  file: "spec/contracts/approved/api-tickets.openapi.yaml"
+  version: "0.1.0"
+  status: "approved"
+  specification_version: "0.2.1"
+  architecture_baseline: "B-01"
+  interface: "AIF-APIBrany"
+  provided_by_component: "AC-MobilnaBrana"        # ADR-001
+  communication_style: "synchronous REST / HTTPS + JSON"   # ADR-002
+  policy: "spec/policies/contract-design-profile.yaml (approved 2026-11-21)"
+
+common:
+  application_service: "AS-SpravaTicketov"
+  business_service: "BS-VybavovanieTicketov"
+  business_process: "BP-VybavovanieTicketu"
+  requirements: ["R-002"]
+  data_objects: ["DO-Ticket"]
+  quality_requirements: ["QR-001", "QR-002", "QR-004"]
+
+operations:
+  - operation_id: "podatTicket"
+    http: "POST /api/v1/tickets"
+    business_process: "BP-VytvorenieTicketu"
+    roles: ["ROLE-Ziadatel"]
+    rules: ["BR-005", "BR-003"]
+    scenarios: ["SC-002-01", "SC-002-02", "SC-002-10"]
+    lifecycle_transition: "null → podany"
+    data_objects: ["DO-Ticket"]
+    errors: { "401": "QR-001", "403": "iba rola študent podáva ticket", "409": "Q-11 kľúč s iným obsahom", "422": "BR-005" }
+
+  - operation_id: "zoznamTicketov"
+    http: "GET /api/v1/tickets"
+    business_process: "BP-VybavovanieTicketu"
+    roles: ["ROLE-Ziadatel", "ROLE-Posudzovatel"]
+    rules: ["BR-003"]
+    scenarios: ["SC-002-01", "SC-002-04"]
+    data_objects: ["DO-Ticket"]
+
+  - operation_id: "detailTicketu"
+    http: "GET /api/v1/tickets/{ticketId}"
+    business_process: "BP-VybavovanieTicketu"
+    roles: ["ROLE-Ziadatel", "ROLE-Posudzovatel"]
+    rules: ["BR-003", "BR-007"]
+    scenarios: ["SC-002-03", "SC-002-04", "SC-002-06", "SC-002-11"]
+    data_objects: ["DO-Ticket"]
+    errors: { "404": "BR-003 – cudzí ticket sa správa ako neexistujúci" }
+
+  - operation_id: "prevziatTicket"
+    http: "POST /api/v1/tickets/{ticketId}/prevzatie"
+    business_process: "BP-PosudenieTicketu"
+    roles: ["ROLE-Posudzovatel"]
+    rules: ["BR-002", "BR-004", "BR-001"]
+    scenarios: ["SC-002-03"]
+    lifecycle_transition: "podany → v_posudzovani"
+    data_objects: ["DO-Ticket"]
+    audit: "QR-002"
+    errors: { "403": "BR-002", "404": "BR-003", "409": "BR-004 / BR-001" }
+
+  - operation_id: "rozhodnutTicket"
+    http: "POST /api/v1/tickets/{ticketId}/rozhodnutie"
+    business_process: "BP-PosudenieTicketu"
+    roles: ["ROLE-Posudzovatel"]
+    rules: ["BR-001", "BR-002", "BR-004", "BR-006", "BR-007"]
+    scenarios: ["SC-002-05", "SC-002-06", "SC-002-07", "SC-002-08", "SC-002-09", "SC-002-11"]
+    lifecycle_transition: "v_posudzovani → schvaleny | zamietnuty"
+    data_objects: ["DO-Ticket", "DO-Notifikacia"]
+    audit: "QR-002"
+    side_effect:
+      application_service: "AS-Notifikacie"
+      business_process: "BP-OznamenieVysledku"
+      interaction: "INT-003"
+      technology_service: "TS-NotifikacnaSluzba"
+      decision: "ADR-003"
+    errors: { "403": "BR-002; BR-004 – rozhoduje iný než ten, kto prevzal (Q-19)", "404": "BR-003", "409": "BR-001 / BR-004", "422": "BR-006" }
+
+non_http_behaviour:
+  - id: "NOTIF-TicketRozhodnuty"
+    description: "Push notifikácia žiadateľovi po rozhodnutí (INT-003, AS-Notifikacie)."
+    payload: ["ticketId", "stav"]           # QR-004 – bez osobných údajov
+    on_failure: "rozhodnutie platí, zlyhanie sa zaznamená (QR-003, ADR-003)"
+    scenarios: ["SC-002-05", "SC-002-06", "SC-002-11"]
+
+coverage:
+  scenarios_mapped: ["SC-002-01","SC-002-02","SC-002-03","SC-002-04","SC-002-05","SC-002-06","SC-002-07","SC-002-08","SC-002-09","SC-002-10","SC-002-11"]
+  rules_mapped: ["BR-001","BR-002","BR-003","BR-004","BR-005","BR-006","BR-007"]

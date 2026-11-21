@@ -1,0 +1,27 @@
+tests/test_akceptacia.py::test_SC_002_01_student_poda_uplny_ticket PASSED
+tests/test_akceptacia.py::test_SC_002_02_neuplny_ticket_sa_neprijme PASSED
+tests/test_akceptacia.py::test_SC_002_02_adresat_vyucujuci_bez_id_sa_neprijme PASSED
+tests/test_akceptacia.py::test_SC_002_03_student_sleduje_stav PASSED    
+tests/test_akceptacia.py::test_SC_002_04_student_nevidi_cudzi_ticket PASSED
+tests/test_akceptacia.py::test_BR_003_ticket_vidi_iba_zvoleny_vyucujuci PASSED
+tests/test_akceptacia.py::test_BR_003_ticket_pre_so_vidi_kazdy_zamestnanec_so PASSED
+tests/test_akceptacia.py::test_SC_002_05_posudzovatel_schvali_a_ziadatel_dostane_oznamenie PASSED
+tests/test_akceptacia.py::test_SC_002_06_zamietnutie_s_odovodnenim PASSED
+tests/test_akceptacia.py::test_SC_002_07_rozhodnuty_ticket_sa_neda_znovu_rozhodnut PASSED
+tests/test_akceptacia.py::test_BR_001_pri_subehu_plati_iba_prve_rozhodnutie PASSED
+tests/test_akceptacia.py::test_SC_002_08_ziadatel_nemoze_rozhodnut PASSED
+tests/test_akceptacia.py::test_BR_002_ziadatel_nemoze_prevziat_a_posudzovatel_nemoze_podat PASSED
+tests/test_akceptacia.py::test_SC_002_09_zamietnutie_bez_odovodnenia_sa_neprijme PASSED
+tests/test_akceptacia.py::test_SC_002_10_opakovane_odoslanie_nevytvori_druhy_ticket PASSED
+tests/test_akceptacia.py::test_Q_11_rovnaky_kluc_s_inym_obsahom_je_konflikt PASSED
+tests/test_akceptacia.py::test_SC_002_11_vypadok_notifikacii_nezrusi_rozhodnutie PASSED
+tests/test_akceptacia.py::test_Q_19_rozhoduje_iba_ten_kto_prevzal PASSED
+tests/test_akceptacia.py::test_BR_004_nemozno_rozhodnut_neprevzaty_ticket PASSED
+tests/test_akceptacia.py::test_QR_001_bez_prihlasenia_401 PASSED        
+tests/test_akceptacia.py::test_QR_002_kazda_zmena_stavu_ma_audit PASSED 
+tests/test_akceptacia.py::test_QR_004_notifikacia_ani_log_neobsahuju_osobne_udaje PASSED
+tests/test_akceptacia.py::test_filter_podla_stavu PASSED                
+tests/test_contract.py::test_approved_contract_je_platne_openapi PASSED 
+tests/test_contract.py::test_implementacia_ma_presne_operacie_contractu PASSED
+tests/test_contract.py::test_kazda_operacia_ma_mapping_na_sdd PASSED    
+======================== 26 passed, 1 warning in 0.30s =========================

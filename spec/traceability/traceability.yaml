@@ -1,0 +1,102 @@
+# Traceability R-002 – od potreby ku kódu. Stav: draft.
+# Položky contract → code → test doplní IMPLEMENT_CHANGE / VERIFY_CHANGE po schválení contractu.
+
+traces:
+  # Motivácia
+  - { from: "SH-Student", to: "DRV-001", meaning: "Študent pociťuje, že aplikácia iba pasívne zobrazuje informácie." }
+  - { from: "DRV-001", to: "ASM-003", meaning: "Driver sa prejavuje tým, že študent nemôže vytvoriť ani sledovať ticket." }
+  - { from: "ASM-003", to: "G-002", meaning: "Zistenie odôvodňuje cieľ zjednodušiť organizáciu štúdia." }
+  - { from: "OUT-002", to: "G-002", meaning: "Výsledok – študent spravuje úkony v aplikácii – napĺňa cieľ." }
+  - { from: "R-002", to: "OUT-002", meaning: "Requirement realizuje očakávaný výsledok." }
+  - { from: "R-002", to: "PRI-001", meaning: "Requirement realizuje princíp vybavovania na jednom mieste." }
+  - { from: "C-001", to: "BR-003", meaning: "GDPR obmedzuje, kto smie ticket vidieť." }
+
+  # Business
+  - { from: "BS-VybavovanieTicketov", to: "R-002", meaning: "Business služba realizuje Requirement." }
+  - { from: "BP-VybavovanieTicketu", to: "BS-VybavovanieTicketov", meaning: "Proces realizuje business službu." }
+  - { from: "ROLE-Ziadatel", to: "BP-VybavovanieTicketu", meaning: "Žiadateľ vytvára a sleduje ticket." }
+  - { from: "ROLE-Posudzovatel", to: "BP-VybavovanieTicketu", meaning: "Posudzovateľ ticket posudzuje a rozhoduje." }
+  - { from: "BE-PoziadavkaStudenta", to: "BP-VytvorenieTicketu", meaning: "Požiadavka študenta spúšťa vytvorenie ticketu." }
+  - { from: "BP-VybavovanieTicketu", to: "BO-Ticket", meaning: "Proces pracuje s ticketom." }
+
+  # Application
+  - { from: "BP-VybavovanieTicketu", to: "AS-SpravaTicketov", meaning: "Proces používa aplikačnú službu Správa ticketov (Application Usage)." }
+  - { from: "BP-OznamenieVysledku", to: "AS-Notifikacie", meaning: "Oznámenie výsledku používa službu Notifikácie." }
+  - { from: "AS-SpravaTicketov", to: "AC-MobilnaBrana", meaning: "Mobilná brána poskytuje službu cez AF-EvidenciaTicketov (ADR-001 Proposed)." }
+  - { from: "AS-SpravaTicketov", to: "AIF-APIBrany", meaning: "Služba je dostupná cez API brány." }
+  - { from: "AC-ManazmentTicketov", to: "AS-SpravaTicketov", meaning: "Klientský modul používa službu (INT-001)." }
+  - { from: "DO-Ticket", to: "BO-Ticket", meaning: "Dátový objekt realizuje business objekt." }
+  - { from: "AC-MobilnaBrana", to: "DO-Ticket", meaning: "Mobilná brána vlastní ticket (ADR-001 Proposed)." }
+
+  # Správanie
+  - { from: "R-002", to: "US-002", meaning: "User story spresňuje Requirement." }
+  - { from: "R-002", to: "SC-002-01", meaning: "Scenario overuje podanie úplného ticketu." }
+  - { from: "R-002", to: "SC-002-02", meaning: "Scenario overuje odmietnutie neúplného ticketu." }
+  - { from: "R-002", to: "SC-002-03", meaning: "Scenario overuje sledovanie stavu." }
+  - { from: "R-002", to: "SC-002-04", meaning: "Scenario overuje, že cudzí ticket nie je sprístupnený." }
+  - { from: "R-002", to: "SC-002-05", meaning: "Scenario overuje schválenie a oznámenie." }
+  - { from: "R-002", to: "SC-002-06", meaning: "Scenario overuje zamietnutie s odôvodnením." }
+  - { from: "R-002", to: "SC-002-07", meaning: "Scenario overuje konečnosť rozhodnutia." }
+  - { from: "R-002", to: "SC-002-08", meaning: "Scenario overuje, že žiadateľ nerozhoduje." }
+  - { from: "BR-001", to: "SC-002-07", meaning: "Invariant je overený negatívnym scenárom." }
+  - { from: "BR-002", to: "SC-002-08", meaning: "Oprávnenie je overené negatívnym scenárom." }
+  - { from: "BR-003", to: "SC-002-04", meaning: "Prístupové pravidlo je overené negatívnym scenárom." }
+  - { from: "BR-005", to: "SC-002-02", meaning: "Pravidlo úplnosti je overené negatívnym scenárom." }
+  - { from: "BR-006", to: "SC-002-06", meaning: "Pravidlo odôvodnenia je overené scenárom zamietnutia." }
+  - { from: "BR-007", to: "SC-002-05", meaning: "Oznámenie výsledku je overené scenárom schválenia." }
+  - { from: "BR-006", to: "SC-002-09", meaning: "Zamietnutie bez odôvodnenia je odmietnuté (negatívny scenár)." }
+  - { from: "BR-005", to: "SC-002-10", meaning: "Opakované odoslanie nevytvorí duplicitný ticket (Q-11)." }
+  - { from: "BR-007", to: "SC-002-11", meaning: "Výpadok notifikácií nezruší rozhodnutie (Q-07)." }
+  - { from: "R-002", to: "SC-002-09", meaning: "Scenario overuje povinné odôvodnenie zamietnutia." }
+  - { from: "R-002", to: "SC-002-10", meaning: "Scenario overuje ochranu proti duplicite." }
+  - { from: "R-002", to: "SC-002-11", meaning: "Scenario overuje správanie pri výpadku notifikácií." }
+
+  # Technológia a migrácia
+  - { from: "DO-Ticket", to: "ART-DatabazaMobilnejBrany", meaning: "Ticket je fyzicky uložený v databáze mobilnej brány." }
+  - { from: "AC-MobilnaBrana", to: "ART-BackendMobilnejBrany", meaning: "Backend realizuje komponent (v modeli chýba – Q-09)." }
+  - { from: "AS-Notifikacie", to: "TS-NotifikacnaSluzba", meaning: "Notifikácie doručuje notifikačná služba (FCM)." }
+  - { from: "GAP-004", to: "R-002", meaning: "Gap Chýbajúca správa ticketov je riešený Requirementom R-002." }
+  - { from: "D-005", to: "GAP-004", meaning: "Deliverable Modul ticketov uzatvára gap." }
+  - { from: "WP-004", to: "D-005", meaning: "Work Package Vývoj študijných modulov vytvára deliverable." }
+
+  # Contract (API-Tickets 0.1.0 – proposed)
+  - { from: "AS-SpravaTicketov", to: "API-Tickets", meaning: "Contract sprístupňuje aplikačnú službu cez API brány." }
+  - { from: "API-Tickets.podatTicket", to: "SC-002-01", meaning: "Podanie úplného ticketu." }
+  - { from: "API-Tickets.podatTicket", to: "SC-002-02", meaning: "Neúplný ticket vráti 422 s chýbajúcimi údajmi." }
+  - { from: "API-Tickets.podatTicket", to: "SC-002-10", meaning: "Idempotency-Key bráni duplicite." }
+  - { from: "API-Tickets.detailTicketu", to: "SC-002-03", meaning: "Žiadateľ vidí stav ticketu." }
+  - { from: "API-Tickets.detailTicketu", to: "SC-002-04", meaning: "Cudzí ticket vráti 404." }
+  - { from: "API-Tickets.prevziatTicket", to: "SC-002-03", meaning: "Prevzatie mení stav na V posudzovaní." }
+  - { from: "API-Tickets.rozhodnutTicket", to: "SC-002-05", meaning: "Schválenie a oznámenie výsledku." }
+  - { from: "API-Tickets.rozhodnutTicket", to: "SC-002-06", meaning: "Zamietnutie s odôvodnením." }
+  - { from: "API-Tickets.rozhodnutTicket", to: "SC-002-07", meaning: "Rozhodnutý ticket vráti 409." }
+  - { from: "API-Tickets.rozhodnutTicket", to: "SC-002-08", meaning: "Žiadateľ pri rozhodnutí dostane 403." }
+  - { from: "API-Tickets.rozhodnutTicket", to: "SC-002-09", meaning: "Zamietnutie bez odôvodnenia vráti 422." }
+  - { from: "API-Tickets.rozhodnutTicket", to: "SC-002-11", meaning: "Výpadok notifikácií nemení výsledok rozhodnutia." }
+
+  # Code (src/mobilna_brana) → test (IMPLEMENT_CHANGE 2026-11-21, API-Tickets 0.1.0 approved)
+  - { from: "API-Tickets", to: "src/mobilna_brana/api.py", meaning: "Operácie contractu sú realizované v AC-MobilnaBrana (AIF-APIBrany)." }
+  - { from: "AF-EvidenciaTicketov", to: "src/mobilna_brana/tickety/sluzba.py", meaning: "Pravidlá BR-001…BR-007 a lifecycle DO-Ticket." }
+  - { from: "API-Tickets", to: "tests/test_contract.py", meaning: "Implementácia má presne operácie approved contractu; každá odpoveď v testoch je overená voči schéme contractu." }
+  - { from: "SC-002-01", to: "tests/test_akceptacia.py::test_SC_002_01_student_poda_uplny_ticket", meaning: "Automatizovaný test overuje SC-002-01." }
+  - { from: "SC-002-02", to: "tests/test_akceptacia.py::test_SC_002_02_neuplny_ticket_sa_neprijme", meaning: "Automatizovaný test overuje SC-002-02." }
+  - { from: "SC-002-02", to: "tests/test_akceptacia.py::test_SC_002_02_adresat_vyucujuci_bez_id_sa_neprijme", meaning: "Automatizovaný test overuje SC-002-02." }
+  - { from: "SC-002-03", to: "tests/test_akceptacia.py::test_SC_002_03_student_sleduje_stav", meaning: "Automatizovaný test overuje SC-002-03." }
+  - { from: "SC-002-04", to: "tests/test_akceptacia.py::test_SC_002_04_student_nevidi_cudzi_ticket", meaning: "Automatizovaný test overuje SC-002-04." }
+  - { from: "SC-002-05", to: "tests/test_akceptacia.py::test_SC_002_05_posudzovatel_schvali_a_ziadatel_dostane_oznamenie", meaning: "Automatizovaný test overuje SC-002-05." }
+  - { from: "SC-002-06", to: "tests/test_akceptacia.py::test_SC_002_06_zamietnutie_s_odovodnenim", meaning: "Automatizovaný test overuje SC-002-06." }
+  - { from: "SC-002-07", to: "tests/test_akceptacia.py::test_SC_002_07_rozhodnuty_ticket_sa_neda_znovu_rozhodnut", meaning: "Automatizovaný test overuje SC-002-07." }
+  - { from: "SC-002-08", to: "tests/test_akceptacia.py::test_SC_002_08_ziadatel_nemoze_rozhodnut", meaning: "Automatizovaný test overuje SC-002-08." }
+  - { from: "SC-002-09", to: "tests/test_akceptacia.py::test_SC_002_09_zamietnutie_bez_odovodnenia_sa_neprijme", meaning: "Automatizovaný test overuje SC-002-09." }
+  - { from: "SC-002-10", to: "tests/test_akceptacia.py::test_SC_002_10_opakovane_odoslanie_nevytvori_druhy_ticket", meaning: "Automatizovaný test overuje SC-002-10." }
+  - { from: "SC-002-10", to: "tests/test_akceptacia.py::test_Q_11_rovnaky_kluc_s_inym_obsahom_je_konflikt", meaning: "Automatizovaný test overuje SC-002-10." }
+  - { from: "SC-002-11", to: "tests/test_akceptacia.py::test_SC_002_11_vypadok_notifikacii_nezrusi_rozhodnutie", meaning: "Automatizovaný test overuje SC-002-11." }
+  - { from: "BR-001", to: "tests/test_akceptacia.py::test_BR_001_pri_subehu_plati_iba_prve_rozhodnutie", meaning: "Automatizovaný test overuje BR-001." }
+  - { from: "BR-002", to: "tests/test_akceptacia.py::test_BR_002_ziadatel_nemoze_prevziat_a_posudzovatel_nemoze_podat", meaning: "Automatizovaný test overuje BR-002." }
+  - { from: "BR-003", to: "tests/test_akceptacia.py::test_BR_003_ticket_vidi_iba_zvoleny_vyucujuci", meaning: "Automatizovaný test overuje BR-003." }
+  - { from: "BR-003", to: "tests/test_akceptacia.py::test_BR_003_ticket_pre_so_vidi_kazdy_zamestnanec_so", meaning: "Automatizovaný test overuje BR-003." }
+  - { from: "BR-004", to: "tests/test_akceptacia.py::test_Q_19_rozhoduje_iba_ten_kto_prevzal", meaning: "Automatizovaný test overuje BR-004." }
+  - { from: "BR-004", to: "tests/test_akceptacia.py::test_BR_004_nemozno_rozhodnut_neprevzaty_ticket", meaning: "Automatizovaný test overuje BR-004." }
+  - { from: "QR-001", to: "tests/test_akceptacia.py::test_QR_001_bez_prihlasenia_401", meaning: "Automatizovaný test overuje QR-001." }
+  - { from: "QR-002", to: "tests/test_akceptacia.py::test_QR_002_kazda_zmena_stavu_ma_audit", meaning: "Automatizovaný test overuje QR-002." }
+  - { from: "QR-004", to: "tests/test_akceptacia.py::test_QR_004_notifikacia_ani_log_neobsahuju_osobne_udaje", meaning: "Automatizovaný test overuje QR-004." }

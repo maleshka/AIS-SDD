@@ -1,0 +1,23 @@
+PASS yaml  spec/application/components.yaml
+PASS yaml  spec/application/data-objects.yaml
+PASS yaml  spec/application/interactions.yaml
+PASS yaml  spec/application/lifecycles.yaml
+PASS yaml  spec/application/service-realization.yaml
+PASS yaml  spec/architecture/context/architecture-context.yaml
+PASS yaml  spec/architecture/continuum/reuse-catalog.yaml
+PASS yaml  spec/architecture/migration/implementation-context.yaml
+PASS yaml  spec/business/actors-processes.yaml
+PASS yaml  spec/contracts/approved/api-tickets.openapi.yaml
+PASS yaml  spec/contracts/approved/approval.yaml
+PASS yaml  spec/contracts/approved/contract-mapping.yaml
+PASS yaml  spec/manifest.yaml
+PASS yaml  spec/policies/contract-design-profile.yaml
+PASS yaml  spec/requirements/business-rules.yaml
+PASS yaml  spec/requirements/quality-requirements.yaml
+PASS yaml  spec/requirements/requirements.yaml
+PASS yaml  spec/technology/deployment.yaml
+PASS yaml  spec/technology/technology-context.yaml
+PASS yaml  spec/traceability/traceability.yaml
+PASS ids   všetky použité IDs sú definované (152 definovaných)
+PASS trace  scenáre vo feature = acceptance_scenarios R-002 
+RESULT: PASS

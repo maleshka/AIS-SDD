@@ -1,0 +1,23 @@
+# Záznam ľudského schválenia contractu (SDD_PROJECT_TEMPLATE kap. 16).
+# Zapísané na výslovný pokyn schvaľujúcej osoby („áno, súhlasím“ – 2026-11-21); AI contract neschválila sama.
+
+approval:
+  contract_id: "API-Tickets"
+  version: "0.1.0"
+  status: "approved"
+  file: "spec/contracts/approved/api-tickets.openapi.yaml"
+  mapping: "spec/contracts/approved/contract-mapping.yaml"
+  specification_version: "0.2.1"
+  architecture_baseline: "B-01"
+  approved_by: "Anna-Mariia Malesh"
+  approved_by_role: "Solution Architect"
+  approved_on: "2026-11-21"
+  approved_in_pull_request: null     # repozitár zatiaľ nemá git / PR
+  reviewed_items:
+    - "business význam operácií (R-002, BP-VybavovanieTicketu)"
+    - "component boundary (ADR-001), komunikačný štýl (ADR-002)"
+    - "security a authorization (bearer token, BR-002, BR-003, Q-19)"
+    - "error behavior (problem+json, 401/403/404/409/422)"
+    - "retry a idempotency (Idempotency-Key, BR-001 pri súbehu)"
+    - "technické voľby 1–8 z reports/2026-11-21-DESIGN_CONTRACT-R-002.md"
+  unresolved_decisions: []

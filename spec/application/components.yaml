@@ -1,0 +1,54 @@
+# Schválila: Anna-Mariia Malesh, 2026-11-21 – specification 0.2.0 (záznam ľudského schválenia zapísaný na jej pokyn).
+# Etapa 3 – Application Structure (model B-01: Application structure / cooperation TO BE).
+# Hranica medzi AC-ManazmentTicketov a AC-MobilnaBrana: rozhodnutie Q-01 (Anna-Mariia Malesh, 2026-11-21), ADR-001.
+
+application_components:
+  - id: "AC-MobilnaBrana"
+    name: "Mobilná brána"
+    responsibility: >
+      Backend riešenia: sprístupňuje služby aplikácii Moje štúdium cez API brány. Pre R-002 eviduje tickety
+      (AF-EvidenciaTicketov), vynucuje pravidlá ich vybavovania a odosiela notifikácie o ich stave.
+    provides_interfaces: ["AIF-APIBrany"]
+    provides_services: ["AS-SpravaTicketov", "AS-Notifikacie"]
+    functions: ["AF-EvidenciaTicketov", "AF-OdosielanieNotifikacii", "AF-IntegraciaUIS"]
+    uses_technology_services: ["TS-HostingMobilnejBrany", "TS-NotifikacnaSluzba"]
+    owns_data_objects: ["DO-Ticket"]
+    allowed_dependencies:
+      - target: "TS-NotifikacnaSluzba"
+        reason: "doručenie notifikácie o stave ticketu (AS-Notifikacie)"
+    not_allowed_for_r002:
+      - target: "AC-UIS"
+        reason: "ticket sa v UIS neukladá (GAP-004: ukladá sa v databáze mobilnej brány); identitu poskytuje existujúce prihlásenie"
+    requirements: ["R-002"]
+    status: "approved"
+    decision: "ADR-001"
+
+  - id: "AC-MojeStudium"
+    name: "Moje štúdium"
+    responsibility: "Mobilná aplikácia študenta; zobrazuje dáta a služby, nevykonáva biznis logiku (PRI-002)."
+    realizes_business_interface: "BI-MobilnaAplikacia"
+    contains_components: ["AC-ManazmentTicketov"]
+    uses_interfaces: ["AIF-APIBrany"]
+    status: "approved"
+
+  - id: "AC-ManazmentTicketov"
+    name: "Manažment ticketov"
+    responsibility: >
+      Klientský modul aplikácie Moje štúdium: umožní študentovi vytvoriť ticket a sledovať jeho stav
+      pomocou AS-SpravaTicketov; neukladá ani nemení ticket inak než cez API brány.
+    part_of: "AC-MojeStudium"
+    uses_services: ["AS-SpravaTicketov", "AS-Notifikacie"]
+    owns_data_objects: []
+    allowed_dependencies:
+      - target: "AC-MobilnaBrana"
+        via_interface: "AIF-APIBrany"
+        reason: "jediný povolený prístup k ticketom (PRI-002)"
+    requirements: ["R-002"]
+    status: "approved"
+    decision: "ADR-001"
+    realization_in_this_slice: "not implemented – candidate code rieši iba backend (AC-MobilnaBrana)"
+
+external_components:
+  - id: "AC-UIS"
+    name: "UIS"
+    role_for_r002: "nepoužíva sa"

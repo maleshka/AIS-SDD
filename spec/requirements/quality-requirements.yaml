@@ -1,0 +1,49 @@
+# Schválila: Anna-Mariia Malesh, 2026-11-21 – specification 0.2.0 (záznam ľudského schválenia zapísaný na jej pokyn).
+# Etapa 4 – quality, security, privacy a audit requirements pre R-002.
+# Čísla (latency, availability, RTO/RPO) nie sú v podkladoch určené a nevypĺňajú sa odhadom (Q-15).
+
+quality_requirements:
+  - id: "QR-001"
+    category: "security"
+    statement: >
+      Každá operácia so službou Správa ticketov vyžaduje prihláseného používateľa (existujúce prihlásenie aplikácie)
+      a overuje oprávnenie podľa BR-002 a BR-003.
+    measure: "Požiadavka bez platného prihlásenia alebo bez oprávnenia je odmietnutá a nič nezmení."
+    owner: null
+    source: "rozhodnutia Q-10a, Q-10b (Anna-Mariia Malesh, 2026-11-21); C-001"
+    status: "approved"
+
+  - id: "QR-002"
+    category: "auditability"
+    statement: >
+      Každá zmena stavu ticketu zaznamená, kto ju vykonal, kedy, z akého a do akého stavu.
+    measure: "Pre každý prechod lifecycle existuje auditný záznam."
+    owner: null
+    source: "rozhodnutie Q-08 (Anna-Mariia Malesh, 2026-11-21)"
+    status: "approved"
+
+  - id: "QR-003"
+    category: "reliability"
+    statement: >
+      Zlyhanie doručenia notifikácie neruší zmenu stavu ticketu a je zaznamenané.
+    measure: "Pri nedostupnej notifikačnej službe je rozhodnutie uložené a zlyhanie zaznamenané."
+    owner: null
+    source: "rozhodnutie Q-07 (Anna-Mariia Malesh, 2026-11-21), ADR-003"
+    status: "approved"
+
+  - id: "QR-004"
+    category: "privacy"
+    statement: >
+      Obsah ticketu (osobné údaje študenta) sa nezapisuje do aplikačného logu a nie je obsahom push notifikácie.
+    measure: "Log a notifikácia obsahujú iba identifikátor ticketu a stav."
+    owner: null
+    source: "návrh AI z C-001 – potvrdiť"
+    status: "approved"
+
+  - id: "QR-005"
+    category: "performance"
+    statement: "Čas odpovede a dostupnosť služby nie sú určené."
+    measure: null
+    owner: null
+    source: "Q-15"
+    status: "open"

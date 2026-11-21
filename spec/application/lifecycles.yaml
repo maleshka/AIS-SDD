@@ -1,0 +1,47 @@
+# Schválila: Anna-Mariia Malesh, 2026-11-21 – specification 0.2.0 (záznam ľudského schválenia zapísaný na jej pokyn).
+# Etapa 4 – lifecycle DO-Ticket. Stavy a prechody: rozhodnutia Q-04a, Q-04b (Anna-Mariia Malesh, 2026-11-21).
+
+lifecycles:
+  - data_object: "DO-Ticket"
+    status: "approved"
+    states:
+      - { id: "podany",        name: "Podaný",        final: false }
+      - { id: "v_posudzovani", name: "V posudzovaní", final: false }
+      - { id: "schvaleny",     name: "Schválený",     final: true }
+      - { id: "zamietnuty",    name: "Zamietnutý",    final: true }
+    initial_state: "podany"
+    transitions:
+      - from: null
+        to: "podany"
+        trigger: "žiadateľ podá úplný ticket"
+        actor: "ROLE-Ziadatel"
+        guard_rules: ["BR-005"]
+        requirements: ["R-002"]
+        scenarios: ["SC-002-01"]
+      - from: "podany"
+        to: "v_posudzovani"
+        trigger: "posudzovateľ ticket prevezme"
+        actor: "ROLE-Posudzovatel"
+        guard_rules: ["BR-002", "BR-004"]
+        requirements: ["R-002"]
+      - from: "v_posudzovani"
+        to: "schvaleny"
+        trigger: "posudzovateľ ticket schváli"
+        actor: "ROLE-Posudzovatel"
+        guard_rules: ["BR-002", "BR-004"]
+        effects: ["BR-007 – oznámenie výsledku žiadateľovi"]
+        requirements: ["R-002"]
+        scenarios: ["SC-002-05"]
+      - from: "v_posudzovani"
+        to: "zamietnuty"
+        trigger: "posudzovateľ ticket zamietne s odôvodnením"
+        actor: "ROLE-Posudzovatel"
+        guard_rules: ["BR-002", "BR-004", "BR-006"]
+        rejected_when: "chýba odôvodnenie (SC-002-09)"
+        effects: ["BR-007 – oznámenie výsledku žiadateľovi"]
+        requirements: ["R-002"]
+        scenarios: ["SC-002-06"]
+    forbidden:
+      - description: "akýkoľvek prechod zo stavu schvaleny alebo zamietnuty"
+        rule: "BR-001"
+        scenarios: ["SC-002-07"]

@@ -1,0 +1,45 @@
+# Schválila: Anna-Mariia Malesh, 2026-11-21 – specification 0.2.0 (záznam ľudského schválenia zapísaný na jej pokyn).
+# Etapa 3 – Application Cooperation (model B-01: Application cooperation TO BE, Technology usage TO BE).
+
+interactions:
+  - id: "INT-001"
+    consumer: "AC-ManazmentTicketov"        # časť AC-MojeStudium
+    provider: "AC-MobilnaBrana"
+    interface: "AIF-APIBrany"
+    uses_application_service: "AS-SpravaTicketov"
+    information: ["DO-Ticket"]
+    purpose: "Žiadateľ vytvorí ticket a sleduje jeho stav."
+    communication_style: "synchronous request-response, REST / HTTPS + JSON"
+    decision: "ADR-002"     # rozhodnutie Q-13 (Anna-Mariia Malesh, 2026-11-21)
+    requirements: ["R-002"]
+    status: "approved"
+
+  - id: "INT-002"
+    consumer: "klient posudzovateľa (mimo rozsahu)"
+    provider: "AC-MobilnaBrana"
+    interface: "AIF-APIBrany"
+    uses_application_service: "AS-SpravaTicketov"
+    information: ["DO-Ticket"]
+    purpose: "Posudzovateľ prevezme a rozhodne ticket."
+    communication_style: "synchronous request-response, REST / HTTPS + JSON"
+    decision: "ADR-002"
+    source: "rozhodnutie tímu 2026-11-21 (Q-02); klient posudzovateľa nie je v modeli"
+    requirements: ["R-002"]
+    status: "approved"
+
+  - id: "INT-003"
+    consumer: "AC-MobilnaBrana"
+    provider: "TS-NotifikacnaSluzba"        # realizuje NODE-FCM
+    uses_technology_service: "TS-NotifikacnaSluzba"
+    information: ["DO-Notifikacia"]
+    purpose: "Doručenie notifikácie o výsledku ticketu na mobilné zariadenie žiadateľa (AS-Notifikacie)."
+    communication_style: "asynchronous (odoslanie bez čakania na doručenie)"
+    trigger: "iba rozhodnutie o tickete (Schválený / Zamietnutý)"
+    failure_behaviour: "rozhodnutie platí, zlyhanie sa zaznamená – Q-07 (Anna-Mariia Malesh, 2026-11-21), ADR-003"
+    decision: "ADR-003"
+    requirements: ["R-002"]
+    status: "approved"
+
+not_used_for_r002:
+  - interface: "AIF-APIUIS"
+    reason: "Ticket nevyžaduje zápis ani čítanie z UIS."

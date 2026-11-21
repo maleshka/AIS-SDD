@@ -1,0 +1,48 @@
+# Schválila: Anna-Mariia Malesh, 2026-11-21 – specification 0.2.0 (záznam ľudského schválenia zapísaný na jej pokyn).
+# Etapa 2–3 – Service Realization a Application Usage (model B-01: Service realization viewpoint,
+# Application usage TO BE, Requirements viewpoint).
+
+service_realization:
+  - business_service: "BS-VybavovanieTicketov"
+    used_by_roles: ["ROLE-Ziadatel"]
+    realized_by_business_processes: ["BP-VybavovanieTicketu"]
+    supported_by_application_services:
+      - "AS-SpravaTicketov"     # Serving → BP-VybavovanieTicketu
+      - "AS-Notifikacie"        # Serving → BP-VybavovanieTicketu, BP-OznamenieVysledku
+    provided_by_components:
+      - "AC-MobilnaBrana"       # rozhodnutie Q-01, ADR-001
+    requirements: ["R-002"]
+
+application_services:
+  - id: "AS-SpravaTicketov"
+    name: "Správa ticketov"
+    serves_business_processes: ["BP-VybavovanieTicketu"]
+    realized_by:
+      - element: "AF-EvidenciaTicketov"
+        assigned_to: "AC-MobilnaBrana"
+      - element: "AC-ManazmentTicketov"
+        note: "v modeli tiež Realization; podľa Q-01 klientská časť služby (iba používa AS-SpravaTicketov)"
+    accessed_via: "AIF-APIBrany"
+    behaviour_summary:
+      - "vytvoriť ticket (Žiadateľ)"
+      - "zobraziť moje tickety a stav ticketu (Žiadateľ)"
+      - "zobraziť tickety určené posudzovateľovi (Posudzovateľ)"
+      - "prevziať ticket (Posudzovateľ)"
+      - "rozhodnúť ticket – schváliť / zamietnuť (Posudzovateľ)"
+    data_objects: ["DO-Ticket"]
+    requirements: ["R-002"]
+    status: "approved"
+
+  - id: "AS-Notifikacie"
+    name: "Notifikácie"
+    serves_business_processes: ["BP-VybavovanieTicketu", "BP-OznamenieVysledku"]
+    realized_by:
+      - element: "AC-MobilnaBrana"
+      - element: "AF-OdosielanieNotifikacii"
+        assigned_to: "AC-MobilnaBrana"
+    uses_technology_services: ["TS-NotifikacnaSluzba"]
+    data_objects: ["DO-Notifikacia"]
+    representation: "REP-NotifikaciaStavuTicketu"
+    requirements: ["R-002"]
+    related_gap: "GAP-003"
+    status: "approved"

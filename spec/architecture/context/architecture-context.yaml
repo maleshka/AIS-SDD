@@ -1,0 +1,171 @@
+# Schválila: Anna-Mariia Malesh, 2026-11-21 – specification 0.2.0 (záznam ľudského schválenia zapísaný na jej pokyn).
+# Ručne pripravený súhrn relevantného výrezu modelu B-01 (nie export zo Sparx EA).
+# Účel: jednoznačné priradenie stabilných IDs k názvom prvkov, ktoré v modeli nemajú Alias.
+# Pripravené z modelu Moje_studium_extended_2026_11_21_v21.qea (prvky a väzby čítané z modelu).
+# Človek MUST overiť súlad s modelom a obrázkami a doplniť reviewed_by.
+
+architecture_context:
+  baseline: "B-01"
+  status: "approved"
+  prepared_from:
+    - "Moje_studium_extended_2026_11_21_v21.qea"
+  reviewed_by: "Anna-Mariia Malesh, 2026-11-21"
+
+elements:
+  # --- Motivation ---
+  - { id: "SH-Student",  type: "Stakeholder", name: "Študent" }
+  - { id: "DRV-001", type: "Driver", name: "Súčasná mobilná aplikácia Moje štúdium umožňuje iba pasívne zobrazovanie informácií" }
+  - { id: "ASM-003", type: "Assessment", name: "Študent nemôže vytvoriť ticket ani sledovať jeho vybavenie" }
+  - { id: "G-001", type: "Goal", name: "Zlepšiť komunikáciu študenta s vyučujúcimi" }
+  - { id: "G-002", type: "Goal", name: "Zjednodušiť organizáciu štúdia" }
+  - { id: "OUT-002", type: "Outcome", name: "Študent dokáže spravovať svoje študijné úkony (prihlásenie, zadania, tickety, rezervácie) priamo v aplikácii" }
+  - { id: "PRI-001", type: "Principle", name: "Študent má možnosť aktívne vybavovať svoje študijné záležitosti na jednom mieste" }
+  - { id: "PRI-002", type: "Principle", name: "Princíp: oddelenie klienta od biznis logiky (klient, API, backend)" }
+  - { id: "PRI-003", type: "Principle", name: "Štandard: otvorené rozhrania REST / HTTPS + JSON" }
+  - { id: "R-001", type: "Requirement", name: "Aplikácia umožní písať a odosielať správy vyučujúcim" }
+  - { id: "R-002", type: "Requirement", name: "Aplikácia umožní vytvoriť ticket a sledovať jeho schválenie/zamietnutie" }
+  - { id: "R-003", type: "Requirement", name: "Aplikácia umožní prihlásenie na tému/zadanie" }
+  - { id: "R-004", type: "Requirement", name: "Aplikácia umožní odovzdať zadanie" }
+  - { id: "R-005", type: "Requirement", name: "Aplikácia umožní rezervovať miestnosť (Workzone)" }
+  - { id: "C-001", type: "Constraint", name: "Zobrazenie a spracovanie osobných údajov musí rešpektovať GDPR" }
+  - { id: "CTR-001", type: "Contract", name: "Súhlas so spracovaním údajov (GDPR)" }
+  - { id: "CTR-003", type: "Contract", name: "Študijný poriadok" }
+
+  # --- Business ---
+  - { id: "ACT-Student", type: "Business Actor", name: "Študent" }
+  - { id: "ACT-PedagogickyZbor", type: "Business Actor", name: "Pedagogický zbor" }
+  - { id: "ACT-ZamestnanecSO", type: "Business Actor", name: "Zamestnanec študijného oddelenia" }
+  - { id: "ROLE-Ziadatel", type: "Business Role", name: "Žiadateľ" }
+  - { id: "ROLE-Posudzovatel", type: "Business Role", name: "Posudzovateľ žiadosti" }
+  - { id: "BE-PoziadavkaStudenta", type: "Business Event", name: "Študent má požiadavku alebo problém" }
+  - { id: "BP-VybavovanieTicketu", type: "Business Process", name: "Vybavovanie ticketu" }
+  - { id: "BP-VytvorenieTicketu", type: "Business Process", name: "Vytvorenie ticketu" }
+  - { id: "BP-PosudenieTicketu", type: "Business Process", name: "Posúdenie ticketu" }
+  - { id: "BP-OznamenieVysledku", type: "Business Process", name: "Oznámenie výsledku" }
+  - { id: "BP-ASIS-VybaveniePoziadavky", type: "Business Process", name: "Vybavenie požiadavky na študijnom oddelení (AS-IS)" }
+  - { id: "BS-VybavovanieTicketov", type: "Business Service", name: "Vybavovanie ticketov" }
+  - { id: "BI-MobilnaAplikacia", type: "Business Interface", name: "Mobilná aplikácia" }
+  - { id: "BO-Ticket", type: "Business Object", name: "Ticket" }
+  - { id: "MEA-Ticket", type: "Meaning", name: "Žiadosť študenta, o ktorej rozhoduje vyučujúci alebo študijné oddelenie" }
+  - { id: "REP-NotifikaciaStavuTicketu", type: "Representation", name: "Notifikácia o stave ticketu" }
+  - { id: "PRD-MojeStudiumExtension", type: "Product", name: "Moje štúdium extension" }
+
+  # --- Application ---
+  - { id: "AC-MojeStudium", type: "Application Component", name: "Moje štúdium" }
+  - { id: "AC-ManazmentTicketov", type: "Application Component", name: "Manažment ticketov", note: "v modeli vnorený v Moje štúdium" }
+  - { id: "AC-MobilnaBrana", type: "Application Component", name: "Mobilná brána" }
+  - { id: "AC-UIS", type: "Application Component", name: "UIS" }
+  - { id: "AF-EvidenciaTicketov", type: "Application Function", name: "Evidencia ticketov", note: "v modeli vnorená v Mobilná brána" }
+  - { id: "AF-OdosielanieNotifikacii", type: "Application Function", name: "Odosielanie notifikácií" }
+  - { id: "AF-IntegraciaUIS", type: "Application Function", name: "Integrácia s UIS" }
+  - { id: "AS-SpravaTicketov", type: "Application Service", name: "Správa ticketov" }
+  - { id: "AS-Notifikacie", type: "Application Service", name: "Notifikácie" }
+  - { id: "AIF-APIBrany", type: "Application Interface", name: "API brány" }
+  - { id: "AIF-APIUIS", type: "Application Interface", name: "API UIS" }
+  - { id: "DO-Ticket", type: "Data Object", name: "Ticket" }
+  - { id: "DO-Notifikacia", type: "Data Object", name: "Notifikácia" }
+
+  # --- Technology ---
+  - { id: "LOC-DataCenterSTU", type: "Location", name: "Data center STU" }
+  - { id: "NODE-ServerMobilnejBrany", type: "Node", name: "Server mobilnej brány" }
+  - { id: "NODE-FCM", type: "Node", name: "Firebase Cloud Messaging" }
+  - { id: "DEV-MobilneZariadenie", type: "Device", name: "Mobilné zariadenie" }
+  - { id: "SSW-AplikacnyServer", type: "System Software", name: "Aplikačný server" }
+  - { id: "SSW-DatabazovyServer", type: "System Software", name: "Databázový server" }
+  - { id: "SSW-AndroidIOS", type: "System Software", name: "Android/iOS" }
+  - { id: "TS-HostingMobilnejBrany", type: "Technology Service", name: "Hosting mobilnej brány" }
+  - { id: "TS-APIMobilnejBrany", type: "Technology Service", name: "API mobilnej brány" }
+  - { id: "TS-NotifikacnaSluzba", type: "Technology Service", name: "Notifikačná služba" }
+  - { id: "ART-BackendMobilnejBrany", type: "Artifact", name: "Backend mobilnej brány" }
+  - { id: "ART-DatabazaMobilnejBrany", type: "Artifact", name: "Databáza mobilnej brány" }
+  - { id: "ART-AplikaciaMojeStudium", type: "Artifact", name: "Aplikácia Moje štúdium" }
+  - { id: "NET-Internet", type: "Communication Network", name: "Internet" }
+  - { id: "NET-SietSTU", type: "Communication Network", name: "sieť STU" }
+
+  # --- Implementation & Migration ---
+  - { id: "PL-ASIS", type: "Plateau", name: "Súčasný stav" }
+  - { id: "PL-MVP", type: "Plateau", name: "Prechodný stav (MVP)" }
+  - { id: "PL-TOBE", type: "Plateau", name: "Cieľový stav" }
+  - { id: "GAP-001", type: "Gap", name: "Chýbajúci zápis do UIS cez mobilnú bránu" }
+  - { id: "GAP-003", type: "Gap", name: "Chýbajúce notifikácie pre nové funkcie" }
+  - { id: "GAP-002", type: "Gap", name: "Chýbajúce prijímanie a odosielanie správ v aplikácii" }
+  - { id: "GAP-004", type: "Gap", name: "Chýbajúca správa ticketov" }
+  - { id: "GAP-005", type: "Gap", name: "Chýbajúce prihlasovanie na témy" }
+  - { id: "GAP-006", type: "Gap", name: "Chýbajúce odovzdanie zadaní" }
+  - { id: "GAP-007", type: "Gap", name: "Chýbajúca rezervácia miestností" }
+  - { id: "WP-001", type: "Work Package", name: "Analýza a návrh" }
+  - { id: "WP-002", type: "Work Package", name: "Rozšírenie mobilnej brány" }
+  - { id: "WP-003", type: "Work Package", name: "Vývoj modulu správ" }
+  - { id: "WP-004", type: "Work Package", name: "Vývoj študijných modulov" }
+  - { id: "D-001", type: "Deliverable", name: "Architektonický návrh a DPIA" }
+  - { id: "D-002", type: "Deliverable", name: "Rozšírená mobilná brána (zápisové API do UIS)" }
+  - { id: "D-003", type: "Deliverable", name: "Rozšírenie notifikácií, nové správy" }
+  - { id: "D-005", type: "Deliverable", name: "Modul ticketov (vrátane databázy mobilnej brány)" }
+  - { id: "D-009", type: "Deliverable", name: "Rozšírenie notifikácií, stav ticketov a rezervácií" }
+  - { id: "IE-001", type: "Implementation Event", name: "Schválenie projektu" }
+  - { id: "IE-002", type: "Implementation Event", name: "Release MVP" }
+  - { id: "IE-003", type: "Implementation Event", name: "Spustenie v2.0" }
+
+relationship_notes:
+  # Väzby prečítané z modelu B-01 (typ podľa modelu).
+  - { from: "R-002", type: "Realization", to: "OUT-002", source_view: "Motivation / Requirements viewpoint" }
+  - { from: "R-002", type: "Realization", to: "PRI-001", source_view: "Motivation viewpoint" }
+  - { from: "OUT-002", type: "Realization", to: "G-002", source_view: "Requirements viewpoint" }
+  - { from: "ASM-003", type: "Association", to: "G-002", source_view: "Motivation viewpoint" }
+  - { from: "BS-VybavovanieTicketov", type: "Realization", to: "R-002", source_view: "Requirements viewpoint" }
+  - { from: "BP-VybavovanieTicketu", type: "Realization", to: "BS-VybavovanieTicketov", source_view: "Service realization viewpoint" }
+  - { from: "BP-VybavovanieTicketu", type: "Composition", to: "BP-VytvorenieTicketu", source_view: "Business Process Cooperation TO BE" }
+  - { from: "BP-VybavovanieTicketu", type: "Composition", to: "BP-PosudenieTicketu", source_view: "Business Process Cooperation TO BE" }
+  - { from: "BP-VybavovanieTicketu", type: "Composition", to: "BP-OznamenieVysledku", source_view: "Business Process Cooperation TO BE" }
+  - { from: "BE-PoziadavkaStudenta", type: "Triggering", to: "BP-VytvorenieTicketu", source_view: "Business Process Cooperation TO BE" }
+  - { from: "BP-VytvorenieTicketu", type: "Triggering", to: "BP-PosudenieTicketu", source_view: "Business Process Cooperation TO BE" }
+  - { from: "BP-PosudenieTicketu", type: "Triggering", to: "BP-OznamenieVysledku", source_view: "Business Process Cooperation TO BE" }
+  - { from: "BP-VybavovanieTicketu", type: "Access", to: "BO-Ticket", source_view: "Business Process Cooperation TO BE" }
+  - { from: "ROLE-Ziadatel", type: "Assignment", to: "BP-VybavovanieTicketu", source_view: "Service realization viewpoint" }
+  - { from: "ROLE-Posudzovatel", type: "Assignment", to: "BP-VybavovanieTicketu", source_view: "Service realization viewpoint" }
+  - { from: "ACT-Student", type: "Assignment", to: "ROLE-Ziadatel", source_view: "Service realization viewpoint" }
+  - { from: "ACT-PedagogickyZbor", type: "Assignment", to: "ROLE-Posudzovatel", source_view: "Service realization viewpoint" }
+  - { from: "ACT-ZamestnanecSO", type: "Assignment", to: "ROLE-Posudzovatel", source_view: "Business Process Cooperation TO BE" }
+  - { from: "AS-SpravaTicketov", type: "Serving", to: "BP-VybavovanieTicketu", source_view: "Application usage TO BE" }
+  - { from: "AS-Notifikacie", type: "Serving", to: "BP-VybavovanieTicketu", source_view: "Application usage TO BE" }
+  - { from: "AS-Notifikacie", type: "Serving", to: "BP-OznamenieVysledku", source_view: "Service realization viewpoint" }
+  - { from: "AC-ManazmentTicketov", type: "Realization", to: "AS-SpravaTicketov", source_view: "Application cooperation / usage TO BE" }
+  - { from: "AF-EvidenciaTicketov", type: "Realization", to: "AS-SpravaTicketov", source_view: "model (solution concept TO BE)" }
+  - { from: "AC-MobilnaBrana", type: "Assignment", to: "AF-EvidenciaTicketov", source_view: "model (solution concept TO BE)" }
+  - { from: "AC-MobilnaBrana", type: "Realization", to: "AS-Notifikacie", source_view: "Application cooperation TO BE" }
+  - { from: "AC-MobilnaBrana", type: "Access", to: "DO-Ticket", source_view: "Application structure TO BE" }
+  - { from: "AC-MobilnaBrana", type: "Realization", to: "AIF-APIBrany", source_view: "Application cooperation TO BE" }
+  - { from: "AIF-APIBrany", type: "Serving", to: "AC-MojeStudium", source_view: "Application cooperation TO BE" }
+  - { from: "AC-MobilnaBrana", type: "Serving", to: "AC-MojeStudium", source_view: "Application cooperation TO BE" }
+  - { from: "DO-Ticket", type: "Realization", to: "BO-Ticket", source_view: "Information structure viewpoint" }
+  - { from: "ART-DatabazaMobilnejBrany", type: "Realization", to: "DO-Ticket", source_view: "Information structure viewpoint" }
+  - { from: "REP-NotifikaciaStavuTicketu", type: "Realization", to: "BO-Ticket", source_view: "Information structure viewpoint" }
+  - { from: "BO-Ticket", type: "Association", to: "MEA-Ticket", source_view: "model" }
+  - { from: "NODE-ServerMobilnejBrany", type: "Realization", to: "AC-MobilnaBrana", source_view: "Technology usage TO BE" }
+  - { from: "TS-HostingMobilnejBrany", type: "Serving", to: "AC-MobilnaBrana", source_view: "Technology usage TO BE" }
+  - { from: "SSW-AplikacnyServer", type: "Realization", to: "TS-HostingMobilnejBrany", source_view: "Technology usage TO BE" }
+  - { from: "TS-NotifikacnaSluzba", type: "Serving", to: "AC-MobilnaBrana", source_view: "Technology usage TO BE" }
+  - { from: "NODE-FCM", type: "Realization", to: "TS-NotifikacnaSluzba", source_view: "Technology usage TO BE" }
+  - { from: "NODE-ServerMobilnejBrany", type: "Assignment", to: "SSW-DatabazovyServer", source_view: "Technology TO BE" }
+  - { from: "SSW-DatabazovyServer", type: "Assignment", to: "ART-DatabazaMobilnejBrany", source_view: "Technology TO BE" }
+  - { from: "NODE-ServerMobilnejBrany", type: "Assignment", to: "ART-BackendMobilnejBrany", source_view: "Technology TO BE" }
+  - { from: "NODE-ServerMobilnejBrany", type: "Realization", to: "TS-APIMobilnejBrany", source_view: "Technology TO BE" }
+  - { from: "LOC-DataCenterSTU", type: "Aggregation", to: "NODE-ServerMobilnejBrany", source_view: "Technology TO BE" }
+
+model_findings:
+  # Nezrovnalosti zistené pri čítaní modelu – na rozhodnutie človeka (pozri spec/drafts/open-questions.md).
+  - id: "MF-01"
+    description: >
+      AS-SpravaTicketov realizujú dva prvky: AC-ManazmentTicketov (vnorený v AC-MojeStudium, t. j. klient)
+      a AF-EvidenciaTicketov (priradená AC-MobilnaBrana). DO-Ticket pristupuje iba AC-MobilnaBrana.
+    question: "Q-01"
+  - id: "MF-02"
+    description: >
+      V modeli chýba väzba Realization z ART-BackendMobilnejBrany na AC-MobilnaBrana
+      (Implementation and Deployment Viewpoint neexistuje).
+    question: "Q-09"
+  - id: "MF-03"
+    description: >
+      Posudzovateľ (ROLE-Posudzovatel) nemá v modeli žiadny aplikačný klient; o tickete rozhoduje
+      cez API brány podľa rozhodnutia tímu z 2026-11-21.
+    question: "Q-02"

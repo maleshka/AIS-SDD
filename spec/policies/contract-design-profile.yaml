@@ -1,0 +1,39 @@
+# Spoločné technické pravidlá contractu. Draft – AI ich smie použiť až po schválení človekom.
+
+contract_design_profile:
+  status: "approved"
+  approved_by: "Anna-Mariia Malesh"
+  approved_on: "2026-11-21"
+
+  http:
+    specification: "OpenAPI 3.1"
+    style: "REST / HTTPS + JSON"            # PRI-003, rozhodnutie Q-13, ADR-002
+    base_path: "/api/v1"
+    naming:
+      paths: "kebab-case plural nouns"
+      operation_ids: "lowerCamelCase"
+      json_fields: "camelCase"
+    date_time: "RFC 3339 UTC"
+    identifiers: "UUID"
+    errors: "problem-details (RFC 9457, application/problem+json)"
+    correlation_id_header: "X-Correlation-ID"
+    idempotency_header: "Idempotency-Key"   # vytvorenie ticketu – rozhodnutie Q-11
+
+  status_codes:                              # mapovanie pre R-002
+    created: 201
+    ok: 200
+    validation_error: 422                    # BR-005, BR-006
+    unauthenticated: 401                     # QR-001
+    forbidden: 403                           # BR-002 – prihlásený, ale bez oprávnenia na akciu
+    not_found_or_hidden: 404                 # BR-003 – cudzí ticket sa neprezradí (nevracia sa 403)
+    lifecycle_conflict: 409                  # BR-001, BR-004
+
+  security:
+    authentication: "bearer token z existujúceho prihlásenia aplikácie"   # Q-10a
+    authorization: "explicit per operation (rola Žiadateľ / Posudzovateľ)"
+    role_source: "identita a rola z existujúceho prihlásenia (Q-10b); v testoch testovací token"
+    sensitive_data_in_logs: "zakázané (QR-004)"
+
+  compatibility:
+    versioning: "major verzia v ceste (/api/v1)"
+    breaking_change: "human decision required"

@@ -1,0 +1,61 @@
+# Implementation and Migration kontext (model B-01, Implementation and Migration Viewpoint).
+# Neobsahuje MD, cenu ani harmonogram – tie sú v projektovej dokumentácii (FPA_Moje_studium_extension.xlsx).
+
+implementation:
+  current_plateau: "PL-ASIS"        # Súčasný stav
+  transition_plateau: "PL-MVP"      # Prechodný stav (MVP)
+  target_plateau: "PL-TOBE"         # Cieľový stav – R-002 patrí sem
+
+  plateaus:
+    - id: "PL-ASIS"
+      name: "Súčasný stav"
+      summary: "Moje štúdium iba zobrazuje údaje z UIS; brána z UIS iba číta."
+    - id: "PL-MVP"
+      name: "Prechodný stav (MVP)"
+      summary: "Brána so zápisom do UIS, správy vyučujúcim a notifikácie o nových správach."
+    - id: "PL-TOBE"
+      name: "Cieľový stav"
+      summary: "Tickety, témy, zadania, rezervácie a notifikácie o ich stave; brána má vlastnú databázu pre tickety."
+
+  work_packages:
+    - id: "WP-001"
+      name: "Analýza a návrh"
+      triggered_by: "IE-001"
+      delivers: ["D-001"]
+    - id: "WP-002"
+      name: "Rozšírenie mobilnej brány"
+      delivers: ["D-002 Rozšírená mobilná brána (zápisové API do UIS)", "D-003 Rozšírenie notifikácií, nové správy"]
+    - id: "WP-003"
+      name: "Vývoj modulu správ"
+      triggers: "IE-002 Release MVP"
+    - id: "WP-004"
+      name: "Vývoj študijných modulov"
+      triggered_by: "IE-002"
+      triggers: "IE-003"
+      delivers: ["D-005", "D-009"]       # relevantné pre R-002 (+ moduly tém, zadaní, rezervácií)
+      realizes_requirements: ["R-002"]   # cez D-005 → GAP-004 → R-002
+
+  deliverables:
+    - id: "D-005"
+      name: "Modul ticketov (vrátane databázy mobilnej brány)"
+      type: "approved contract + candidate code + tests (tento SDD výrez)"
+      closes_gap: "GAP-004"
+      realizes_plateau: "PL-TOBE"
+      changes_elements:        # trace na architektúru – v modeli zatiaľ chýba (pozri README, úlohy v EA)
+        - "AS-SpravaTicketov"
+        - "AC-ManazmentTicketov"
+        - "AF-EvidenciaTicketov"
+        - "DO-Ticket"
+        - "ART-DatabazaMobilnejBrany"
+    - id: "D-009"
+      name: "Rozšírenie notifikácií, stav ticketov a rezervácií"
+      closes_gap: "GAP-003"
+      realizes_plateau: "PL-TOBE"
+      changes_elements: ["AS-Notifikacie", "AF-OdosielanieNotifikacii"]
+
+  implementation_events:
+    - { id: "IE-001", name: "Schválenie projektu" }
+    - { id: "IE-002", name: "Release MVP" }
+    - { id: "IE-003", name: "Spustenie v2.0" }
+
+  status: "draft"   # potvrdí človek

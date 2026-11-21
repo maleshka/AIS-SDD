@@ -1,0 +1,89 @@
+# Schválila: Anna-Mariia Malesh, 2026-11-21 – specification 0.2.0 (záznam ľudského schválenia zapísaný na jej pokyn).
+# Etapa 1–2 – actors, roles, business processes a services (model B-01: Organization, Business Process Cooperation TO BE,
+# Service realization viewpoint).
+
+actors:
+  - id: "ACT-Student"
+    name: "Študent"
+    plays_roles: ["ROLE-Ziadatel"]
+  - id: "ACT-PedagogickyZbor"
+    name: "Pedagogický zbor"
+    plays_roles: ["ROLE-Posudzovatel"]
+  - id: "ACT-ZamestnanecSO"
+    name: "Zamestnanec študijného oddelenia"
+    plays_roles: ["ROLE-Posudzovatel"]
+
+actors_roles:
+  - id: "ROLE-Ziadatel"
+    name: "Žiadateľ"
+    responsibility: "Vytvorí ticket so svojou požiadavkou a sleduje jeho vybavenie."
+  - id: "ROLE-Posudzovatel"
+    name: "Posudzovateľ žiadosti"
+    responsibility: "Prevezme ticket, posúdi ho a rozhodne (schváli / zamietne)."
+    note: "Rozhoduje cez API mobilnej brány; klient pre posudzovateľa je mimo rozsahu (Q-02)."
+
+business_events:
+  - id: "BE-PoziadavkaStudenta"
+    name: "Študent má požiadavku alebo problém"
+    triggers: ["BP-VytvorenieTicketu"]
+
+processes:
+  - id: "BP-VybavovanieTicketu"
+    name: "Vybavovanie ticketu"
+    owner: "ROLE-Posudzovatel"
+    performed_by: ["ROLE-Ziadatel", "ROLE-Posudzovatel"]
+    composed_of: ["BP-VytvorenieTicketu", "BP-PosudenieTicketu", "BP-OznamenieVysledku"]
+    trigger: "BE-PoziadavkaStudenta – študent má požiadavku alebo problém."
+    preconditions:
+      - "Študent je prihlásený v aplikácii Moje štúdium."
+    main_flow:
+      - "Žiadateľ vytvorí ticket s predmetom, popisom a adresátom (BP-VytvorenieTicketu); ticket je Podaný."
+      - "Posudzovateľ ticket prevezme; ticket je V posudzovaní (BP-PosudenieTicketu)."
+      - "Posudzovateľ ticket schváli alebo zamietne (BP-PosudenieTicketu)."
+      - "Systém oznámi výsledok žiadateľovi (BP-OznamenieVysledku)."
+      - "Žiadateľ kedykoľvek vidí aktuálny stav svojho ticketu."
+    alternatives:
+      - "Posudzovateľ ticket zamietne s odôvodnením (BR-006, Q-06)."
+      - "Študent použije AS-IS postup e-mailom alebo osobne (BP-ASIS-VybaveniePoziadavky) – ostáva ako alternatíva (GAP-004)."
+    exceptions:
+      - "Ticket je neúplný – nie je podaný (BR-005)."
+      - "Používateľ bez oprávnenia sa pokúsi ticket zobraziť alebo rozhodnúť – odmietnuté (BR-002, BR-003)."
+      - "Ticket je už rozhodnutý – ďalšie rozhodnutie je odmietnuté (BR-001)."
+      - "Notifikačná služba je nedostupná – rozhodnutie platí, oznámenie sa nedoručí okamžite (BR-007, Q-07)."
+    outcome: "Žiadateľ pozná rozhodnutie o svojom tickete (Schválený / Zamietnutý)."
+    accesses_business_objects: ["BO-Ticket"]
+    provides_business_services: ["BS-VybavovanieTicketov"]
+    status: "approved"
+
+  - id: "BP-VytvorenieTicketu"
+    name: "Vytvorenie ticketu"
+    performed_by: ["ROLE-Ziadatel"]
+    triggered_by: "BE-PoziadavkaStudenta"
+    triggers: "BP-PosudenieTicketu"
+  - id: "BP-PosudenieTicketu"
+    name: "Posúdenie ticketu"
+    performed_by: ["ROLE-Posudzovatel"]
+    triggers: "BP-OznamenieVysledku"
+  - id: "BP-OznamenieVysledku"
+    name: "Oznámenie výsledku"
+    supported_by_application_services: ["AS-Notifikacie"]
+
+  - id: "BP-ASIS-VybaveniePoziadavky"
+    name: "Vybavenie požiadavky na študijnom oddelení"
+    plateau: "PL-ASIS"
+    note: "AS-IS: e-mail alebo osobná návšteva, bez evidencie; stav požiadavky študent nevidí."
+
+business_services:
+  - id: "BS-VybavovanieTicketov"
+    name: "Vybavovanie ticketov"
+    used_by_roles: ["ROLE-Ziadatel"]
+    realized_by: ["BP-VybavovanieTicketu"]
+    realizes_requirements: ["R-002"]
+    business_interface: "BI-MobilnaAplikacia"
+    part_of_product: "PRD-MojeStudiumExtension"
+
+business_objects:
+  - id: "BO-Ticket"
+    name: "Ticket"
+    meaning: "MEA-Ticket – žiadosť študenta, o ktorej rozhoduje vyučujúci alebo študijné oddelenie."
+    representations: ["REP-NotifikaciaStavuTicketu"]

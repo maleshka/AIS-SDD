@@ -1,0 +1,65 @@
+# Schválila: Anna-Mariia Malesh, 2026-11-21 – specification 0.2.0 (záznam ľudského schválenia zapísaný na jej pokyn).
+# Etapa 5 – technologický kontext (model B-01: Technology Viewpoint TO BE, Technology Usage Viewpoint TO BE).
+# Všeobecné architektonické názvy sú z modelu. Konkrétny produkt je v ADR-004 (Accepted).
+
+technology_context:
+  status: "applicable"
+  reason: >
+    Ticket sa ukladá v databáze mobilnej brány (ART-DatabazaMobilnejBrany na SSW-DatabazovyServer) a oznámenie
+    výsledku používa notifikačnú službu (TS-NotifikacnaSluzba). Obe ovplyvňujú code, configuration aj testy.
+  confirmed_by_role: "Solution Architect – Anna-Mariia Malesh, 2026-11-21"
+
+locations:
+  - id: "LOC-DataCenterSTU"
+    name: "Data center STU"
+    contains_nodes: ["NODE-ServerMobilnejBrany"]
+
+nodes:
+  - id: "NODE-ServerMobilnejBrany"
+    name: "Server mobilnej brány"
+    networks: ["NET-SietSTU", "NET-Internet"]
+    realizes: ["AC-MobilnaBrana"]                 # väzba v Technology usage TO BE
+    provides_services: ["TS-APIMobilnejBrany"]
+  - id: "NODE-FCM"
+    name: "Firebase Cloud Messaging"
+    type: "externá služba"
+    networks: ["NET-Internet"]
+    provides_services: ["TS-NotifikacnaSluzba"]
+
+devices:
+  - id: "DEV-MobilneZariadenie"
+    name: "Mobilné zariadenie"
+    system_software: ["SSW-AndroidIOS"]
+
+system_software:
+  - id: "SSW-AplikacnyServer"
+    name: "Aplikačný server"
+    host_node: "NODE-ServerMobilnejBrany"       # pomocná trace položka, nie názov ArchiMate väzby
+    provides_services: ["TS-HostingMobilnejBrany"]
+    product: "ADR-004 (Accepted): Python runtime + ASGI server"
+  - id: "SSW-DatabazovyServer"
+    name: "Databázový server"
+    host_node: "NODE-ServerMobilnejBrany"
+    hosts_artifacts: ["ART-DatabazaMobilnejBrany"]
+    product: "ADR-004 (Accepted): relačný DBMS, produkt pre prevádzku neurčený"
+  - id: "SSW-AndroidIOS"
+    name: "Android/iOS"
+    host_node: "DEV-MobilneZariadenie"
+
+technology_services:
+  - id: "TS-HostingMobilnejBrany"
+    used_by: ["AC-MobilnaBrana"]
+  - id: "TS-APIMobilnejBrany"
+    used_by: ["DEV-MobilneZariadenie"]
+  - id: "TS-NotifikacnaSluzba"
+    used_by: ["AC-MobilnaBrana", "AC-MojeStudium"]
+    realized_by: "NODE-FCM"
+
+communication_networks:
+  - { id: "NET-Internet", name: "Internet" }
+  - { id: "NET-SietSTU", name: "sieť STU" }
+
+constraints:
+  - "Konkrétny DBMS pre prevádzku nie je v modeli určený – rozhodne človek (ADR-004)."
+  - "Pre candidate code a testy sa namiesto NODE-FCM použije testovacia náhrada notifikačnej služby."
+  - "Kontajnerizácia, CI/CD ani cloud platforma nie sú súčasťou rozsahu."

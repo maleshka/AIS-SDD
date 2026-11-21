@@ -1,0 +1,101 @@
+# Enterprise Continuum – reuse katalóg (prevzaté z modelu B-01, diagram Enterprise Continuum, tagged values EC_*).
+# Hodnoty UNKNOWN sú v modeli UNKNOWN; AI ich nedopĺňa. Vlastníka, verziu a zrelosť potvrdí človek (Q-17).
+# Väzba SBB → ABB je v modeli Realization.
+
+reuse_candidates:
+  - abb:
+      id: "ABB-APIGateway"
+      name: "ABB API Gateway pre mobilných klientov"
+      continuum: "Architecture Continuum"
+      level: "Common Systems"
+    sbb:
+      id: "SBB-MobilnaBrana"
+      model_element: "AC-MobilnaBrana"
+      continuum: "Solutions Continuum"
+      level: "Organization-Specific"
+    source: "model B-01 – existujúca mobilná brána (AS-IS)"
+    owner: "UNKNOWN"
+    version: "UNKNOWN"
+    maturity: "Existujúca, v prevádzke (len čítanie)"
+    reuse_decision: "Upraviť – rozšíriť existujúcu bránu o zápis do UIS (model); pre R-002 aj o evidenciu ticketov"
+    why_sbb_realizes_abb: >
+      Mobilná brána je jediný vstupný bod aplikácie Moje štúdium k backendu (AIF-APIBrany), agreguje dáta a integruje
+      backend systémy – presne schopnosť, ktorú ABB opisuje.
+    relevant_for_r002: true
+    status: "draft"
+
+  - abb:
+      id: "ABB-Perzistencia"
+      name: "ABB Perzistencia dát (relačná databáza)"
+      continuum: "Architecture Continuum"
+      level: "Common Systems"
+    sbb:
+      id: "SBB-DatabazovyServer"
+      model_element: "SSW-DatabazovyServer"
+      level: "Organization-Specific"
+    source: "model B-01"
+    owner: "UNKNOWN"
+    version: "UNKNOWN"
+    maturity: "UNKNOWN"
+    reuse_decision: "UNKNOWN – rozhodne architekt (produkt: ADR-004)"
+    why_sbb_realizes_abb: "Databázový server na serveri mobilnej brány uchováva ART-DatabazaMobilnejBrany s ticketmi."
+    relevant_for_r002: true
+    status: "draft"
+
+  - abb:
+      id: "ABB-PushNotifikacie"
+      name: "ABB Push notifikačná služba"
+      continuum: "Architecture Continuum"
+      level: "Common Systems"
+    sbb:
+      id: "SBB-FCM"
+      model_element: "NODE-FCM"
+      level: "Common Systems Solutions"
+    source: "model B-01"
+    owner: "UNKNOWN"
+    version: "UNKNOWN"
+    maturity: "UNKNOWN (AS-IS notifikácie sa už posielajú push – Capability Push notifikácie o štúdiu)"
+    reuse_decision: "UNKNOWN – rozhodne architekt"
+    why_sbb_realizes_abb: "Firebase Cloud Messaging doručuje push notifikácie na Android/iOS zariadenia."
+    relevant_for_r002: true
+    status: "draft"
+
+  - abb:
+      id: "ABB-MobilnaAplikacia"
+      name: "ABB Mobilná študentská aplikácia FIIT"
+      level: "Organization-Specific"
+    sbb: { id: "SBB-MojeStudium", model_element: "AC-MojeStudium" }
+    owner: "FIIT STU (UNKNOWN konkrétna osoba)"
+    version: "UNKNOWN"
+    maturity: "UNKNOWN"
+    reuse_decision: "UNKNOWN – rozhodne architekt"
+    relevant_for_r002: true
+    status: "draft"
+
+  - abb:
+      id: "ABB-StudijnyIS"
+      name: "ABB Študijný informačný systém vysokej školy"
+      level: "Industry"
+    sbb: { id: "SBB-UIS", model_element: "AC-UIS" }
+    owner: "UNKNOWN"
+    version: "UNKNOWN"
+    maturity: "UNKNOWN"
+    reuse_decision: "UNKNOWN – rozhodne architekt"
+    relevant_for_r002: false
+    status: "draft"
+
+  - abb:
+      id: "ABB-Hosting"
+      name: "ABB Výpočtová a hostingová infraštruktúra"
+      level: "Foundation"
+    sbb: { id: "SBB-IaaS", model_element: "IaaS" }
+    owner: "UNKNOWN"
+    version: "UNKNOWN"
+    maturity: "UNKNOWN"
+    reuse_decision: "UNKNOWN – rozhodne architekt"
+    relevant_for_r002: false
+    status: "draft"
+
+architecture_assets:
+  - { id: "PRI-002", type: "Princíp", level: "Foundation", maturity: "Ustálený", reuse: "Použiť", owner: "UNKNOWN" }
+  - { id: "PRI-003", type: "Štandard", level: "Foundation", maturity: "Ustálený", reuse: "UNKNOWN – potvrdiť, že API je REST", version: "UNKNOWN (OpenAPI?)", owner: "UNKNOWN" }

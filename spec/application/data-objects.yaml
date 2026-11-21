@@ -1,0 +1,37 @@
+# Schválila: Anna-Mariia Malesh, 2026-11-21 – specification 0.2.0 (záznam ľudského schválenia zapísaný na jej pokyn).
+# Etapa 3 – Data Objects bez databázového návrhu (model B-01: Information structure viewpoint).
+# Atribúty opisujú význam informácie, nie stĺpce tabuľky.
+
+data_objects:
+  - id: "DO-Ticket"
+    name: "Ticket"
+    meaning: "Žiadosť študenta evidovaná riešením, o ktorej rozhoduje adresát (vyučujúci alebo študijné oddelenie)."
+    owner_component: "AC-MobilnaBrana"     # rozhodnutie Q-01, ADR-001
+    related_business_object: "BO-Ticket"
+    realized_by_artifact: "ART-DatabazaMobilnejBrany"
+    sensitive_data: true                   # osobné údaje študenta (C-001)
+    information:                           # Q-05: povinné predmet, popis, adresát; bez príloh
+      - "identifikátor ticketu"
+      - "žiadateľ (študent)"
+      - "adresát (konkrétny vyučujúci alebo študijné oddelenie) – Q-03"
+      - "predmet"
+      - "popis požiadavky"
+      - "stav (lifecycle DO-Ticket)"
+      - "posudzovateľ, ktorý ticket prevzal"
+      - "odôvodnenie rozhodnutia (povinné pri zamietnutí) – Q-06"
+      - "čas podania a čas poslednej zmeny stavu"
+      - "história zmien stavu (audit, QR-002)"
+    lifecycle: "spec/application/lifecycles.yaml#DO-Ticket"
+    status: "approved"
+
+  - id: "DO-Notifikacia"
+    name: "Notifikácia"
+    meaning: "Oznámenie doručované na mobilné zariadenie študenta."
+    owner_component: "AC-MobilnaBrana"
+    related_representation: "REP-NotifikaciaStavuTicketu"
+    sensitive_data: false                  # obsahuje iba identifikátor ticketu a stav (QR-004)
+    information:
+      - "príjemca (žiadateľ)"
+      - "identifikátor ticketu"
+      - "nový stav ticketu"
+    status: "approved"

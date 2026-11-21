@@ -1,0 +1,82 @@
+# Schválila: Anna-Mariia Malesh, 2026-11-21 – specification 0.2.0 (záznam ľudského schválenia zapísaný na jej pokyn).
+# Etapa 1 – motivácia, Requirements a Constraints (z modelu B-01, Motivation a Requirements viewpoint)
+
+stakeholders:
+  - id: "SH-Student"
+    name: "Študent"
+    concern: "Súčasná aplikácia umožňuje iba pasívne zobrazovanie informácií."
+
+drivers:
+  - id: "DRV-001"
+    statement: "Súčasná mobilná aplikácia Moje štúdium umožňuje iba pasívne zobrazovanie informácií."
+    stakeholders: ["SH-Student"]
+
+assessments:
+  - id: "ASM-003"
+    statement: "Študent nemôže vytvoriť ticket ani sledovať jeho vybavenie."
+    driver: "DRV-001"
+    related_goals: ["G-002"]
+
+goals:
+  - id: "G-001"
+    statement: "Zlepšiť komunikáciu študenta s vyučujúcimi."
+    in_scope: false
+  - id: "G-002"
+    statement: "Zjednodušiť organizáciu štúdia."
+    in_scope: true
+
+outcomes:
+  - id: "OUT-002"
+    statement: "Študent dokáže spravovať svoje študijné úkony (prihlásenie, zadania, tickety, rezervácie) priamo v aplikácii."
+    realizes_goal: "G-002"
+
+principles:
+  - id: "PRI-001"
+    statement: "Študent má možnosť aktívne vybavovať svoje študijné záležitosti na jednom mieste."
+  - id: "PRI-002"
+    statement: "Oddelenie klienta od biznis logiky (klient – API – backend)."
+  - id: "PRI-003"
+    statement: "Otvorené rozhrania REST / HTTPS + JSON."
+    note: "Poznámka v modeli: protokol rozhraní nie je uvedený – OVERIŤ (Q-13)."
+
+requirements:
+  - id: "R-002"
+    title: "Vytvorenie a sledovanie ticketu"
+    statement: >
+      Aplikácia umožní študentovi vytvoriť ticket a sledovať jeho schválenie alebo zamietnutie.
+    rationale: >
+      Požiadavky sa dnes vybavujú e-mailom alebo osobne bez evidencie; študent nevidí stav
+      vybavenia (ASM-003, BP-ASIS-VybaveniePoziadavky). E-mailový a osobný postup ostáva ako alternatíva (GAP-004).
+    source_goals: ["G-002"]
+    realizes: ["OUT-002", "PRI-001"]
+    owner: "ROLE-Posudzovatel"   # návrh: vlastník významu – potvrdiť pri review
+    priority: "must"
+    status: "approved"
+    version: "1.0"
+    realized_by: ["BS-VybavovanieTicketov", "AS-SpravaTicketov"]
+    acceptance_scenarios:
+      - "SC-002-01"
+      - "SC-002-02"
+      - "SC-002-03"
+      - "SC-002-04"
+      - "SC-002-05"
+      - "SC-002-06"
+      - "SC-002-07"
+      - "SC-002-08"
+      - "SC-002-09"
+      - "SC-002-10"
+      - "SC-002-11"
+    related_gap: "GAP-004"
+
+  # Ostatné Requirements modelu – mimo rozsahu tohto SDD výrezu.
+  - { id: "R-001", title: "Písanie a odosielanie správ vyučujúcim", source_goals: ["G-001"], status: "out of scope" }
+  - { id: "R-003", title: "Prihlásenie na tému/zadanie", source_goals: ["G-002"], status: "out of scope" }
+  - { id: "R-004", title: "Odovzdanie zadania", source_goals: ["G-002"], status: "out of scope" }
+  - { id: "R-005", title: "Rezervácia miestnosti (Workzone)", source_goals: ["G-002"], status: "out of scope" }
+
+constraints:
+  - id: "C-001"
+    statement: "Zobrazenie a spracovanie osobných údajov musí rešpektovať GDPR."
+    owner: null   # vlastník nie je v modeli určený – doplní človek (napr. ACT-ZamestnanecSO / zodpovedná osoba GDPR)
+    status: "approved"
+    related_contracts: ["CTR-001"]

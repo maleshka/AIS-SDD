@@ -1,0 +1,99 @@
+# Schválila: Anna-Mariia Malesh, 2026-11-21 – specification 0.2.0 (záznam ľudského schválenia zapísaný na jej pokyn).
+# Etapa 4 – Business Rules a invariants pre R-002.
+# Všetko je draft. "source" hovorí, odkiaľ pravidlo pochádza (model alebo rozhodnutie v spec/drafts/open-questions.md).
+
+business_rules:
+  - id: "BR-001"
+    title: "Rozhodnutý ticket je konečný"
+    type: "invariant"
+    statement: >
+      Ticket v stave Schválený alebo Zamietnutý už nemožno prevziať, znovu rozhodnúť ani inak zmeniť jeho stav.
+      Pri súbehu dvoch rozhodnutí platí prvé zaznamenané, druhé je odmietnuté (Q-11).
+    owner: "ROLE-Posudzovatel"
+    source: "rozhodnutie tímu 2026-11-21 (Q-04a)"
+    requirements: ["R-002"]
+    scenarios: ["SC-002-07"]
+    status: "approved"
+    version: "1.0"
+
+  - id: "BR-002"
+    title: "O tickete rozhoduje iba posudzovateľ"
+    type: "authorization rule"
+    statement: >
+      Prevziať a rozhodnúť ticket smie iba adresát ticketu v role Posudzovateľ žiadosti: zvolený vyučujúci,
+      alebo pri adresátovi študijné oddelenie ktorýkoľvek zamestnanec študijného oddelenia.
+      Žiadateľ o svojom tickete rozhodnúť nesmie.
+    owner: "ROLE-Posudzovatel"
+    source: "model B-01 (ROLE-Posudzovatel → BP-VybavovanieTicketu); rozhodnutia Q-02, Q-03 (Anna-Mariia Malesh, 2026-11-21)"
+    requirements: ["R-002"]
+    scenarios: ["SC-002-08"]
+    status: "approved"
+    version: "1.0"
+
+  - id: "BR-003"
+    title: "Prístup k ticketu iba pre účastníkov"
+    type: "authorization rule"
+    statement: >
+      Ticket a jeho stav vidí iba jeho žiadateľ a adresát ticketu (BR-002).
+    owner: null
+    source: "C-001 (GDPR); rozhodnutie Q-08 (Anna-Mariia Malesh, 2026-11-21)"
+    requirements: ["R-002"]
+    constraints: ["C-001"]
+    scenarios: ["SC-002-04"]
+    status: "approved"
+    version: "1.0"
+
+  - id: "BR-004"
+    title: "Rozhodnúť možno iba prevzatý ticket"
+    type: "lifecycle rule"
+    statement: >
+      Posudzovateľ najprv ticket prevezme (Podaný → V posudzovaní); schváliť alebo zamietnuť možno iba ticket V posudzovaní,
+      a rozhodnúť smie iba posudzovateľ, ktorý ticket prevzal. Prevzatý ticket nemôže prevziať iný posudzovateľ.
+    owner: "ROLE-Posudzovatel"
+    source: "rozhodnutia Q-04b, Q-19 (Anna-Mariia Malesh, 2026-11-21); spresnené v 0.2.1"
+    requirements: ["R-002"]
+    scenarios: ["SC-002-05", "SC-002-06"]
+    status: "approved"
+    version: "1.1"
+
+  - id: "BR-005"
+    title: "Úplnosť ticketu"
+    type: "validation rule"
+    statement: >
+      Ticket možno podať iba s predmetom, popisom požiadavky a adresátom.
+    owner: "ROLE-Ziadatel"
+    source: "rozhodnutie Q-05 (Anna-Mariia Malesh, 2026-11-21); bez príloh"
+    requirements: ["R-002"]
+    scenarios: ["SC-002-01", "SC-002-02", "SC-002-10"]
+    status: "approved"
+    version: "1.0"
+
+  - id: "BR-006"
+    title: "Zamietnutie s odôvodnením"
+    type: "validation rule"
+    statement: >
+      Zamietnutie ticketu musí obsahovať odôvodnenie; pri schválení je odôvodnenie voliteľné.
+    owner: "ROLE-Posudzovatel"
+    source: "rozhodnutie Q-06 (Anna-Mariia Malesh, 2026-11-21)"
+    requirements: ["R-002"]
+    scenarios: ["SC-002-06", "SC-002-09"]
+    status: "approved"
+    version: "1.0"
+
+  - id: "BR-007"
+    title: "Oznámenie výsledku žiadateľovi"
+    type: "rule"
+    statement: >
+      Po rozhodnutí o tickete (schválenie alebo zamietnutie) systém oznámi výsledok žiadateľovi; pri prevzatí sa
+      notifikácia neposiela. Nedostupnosť notifikačnej služby nesmie zrušiť ani vrátiť zaznamenané rozhodnutie;
+      zlyhanie sa zaznamená a výsledok je žiadateľovi vždy dostupný pri sledovaní ticketu.
+    owner: "ROLE-Posudzovatel"
+    source: "model B-01 (BP-PosudenieTicketu → BP-OznamenieVysledku, AS-Notifikacie); správanie – rozhodnutie Q-07 (Anna-Mariia Malesh, 2026-11-21)"
+    requirements: ["R-002"]
+    scenarios: ["SC-002-05", "SC-002-06", "SC-002-11"]
+    status: "approved"
+    version: "1.0"
+
+invariants_summary:
+  - "BR-001: stav Schválený/Zamietnutý sa už nemení (platí aj pri súbehu dvoch rozhodnutí a pri opakovaní požiadavky)."
+  - "BR-003: ticket nikdy nie je sprístupnený osobe, ktorá nie je jeho žiadateľom ani posudzovateľom."

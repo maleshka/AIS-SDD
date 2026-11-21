@@ -1,0 +1,327 @@
+openapi: 3.1.0
+info:
+  title: API-Tickets – Správa ticketov (Mobilná brána)
+  version: 0.1.0
+  summary: HTTP contract pre AS-SpravaTicketov na rozhraní AIF-APIBrany, ktoré poskytuje AC-MobilnaBrana.
+  description: |
+    Stav: **approved** – schválila Anna-Mariia Malesh, 2026-11-21 (approval.yaml).
+    Specification baseline: 0.2.1 · Architecture baseline: B-01 · Requirement: R-002.
+    Mapping na IDs špecifikácie je v `contract-mapping.yaml` a pri každej operácii v `x-sdd`.
+
+    Pravidlá z approved contract-design-profile.yaml: OpenAPI 3.1, REST / HTTPS + JSON, base path `/api/v1`,
+    camelCase JSON, RFC 3339 UTC, UUID, chyby `application/problem+json`, `X-Correlation-ID`, `Idempotency-Key`
+    pri vytvorení ticketu, bearer token z existujúceho prihlásenia.
+  x-status: approved
+  x-specification-version: "0.2.1"
+  x-requirement: R-002
+servers:
+  - url: /api/v1
+security:
+  - bearerAuth: []
+tags:
+  - name: Tickety
+    description: AS-SpravaTicketov – vytvorenie, sledovanie, prevzatie a rozhodnutie ticketu.
+
+paths:
+  /tickets:
+    post:
+      operationId: podatTicket
+      tags: [Tickety]
+      summary: Žiadateľ podá ticket
+      description: |
+        Vytvorí ticket v stave `podany` (BR-005). Opakované odoslanie s rovnakým `Idempotency-Key` a rovnakým obsahom
+        nevytvorí druhý ticket a vráti pôvodný výsledok (Q-11, SC-002-10).
+      x-sdd:
+        roles: [ROLE-Ziadatel]
+        rules: [BR-005, BR-003]
+        scenarios: [SC-002-01, SC-002-02, SC-002-10]
+        lifecycle: "null → podany"
+      parameters:
+        - $ref: "#/components/parameters/IdempotencyKey"
+        - $ref: "#/components/parameters/CorrelationId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/NovyTicket" }
+      responses:
+        "201":
+          description: Ticket bol podaný (alebo opakované odoslanie s rovnakým kľúčom vrátilo pôvodný ticket).
+          headers:
+            Location:
+              schema: { type: string }
+              description: URI vytvoreného ticketu.
+            X-Correlation-ID: { $ref: "#/components/headers/CorrelationId" }
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Ticket" }
+        "401": { $ref: "#/components/responses/Neprihlaseny" }
+        "403": { $ref: "#/components/responses/BezOpravnenia" }
+        "409": { $ref: "#/components/responses/KonfliktKluca" }
+        "422": { $ref: "#/components/responses/NeplatneUdaje" }
+
+    get:
+      operationId: zoznamTicketov
+      tags: [Tickety]
+      summary: Tickety viditeľné pre prihláseného používateľa
+      description: |
+        Žiadateľ dostane svoje tickety; posudzovateľ tickety, ktorých je adresátom (BR-003, Q-03).
+        Iné tickety sa nevracajú.
+      x-sdd:
+        roles: [ROLE-Ziadatel, ROLE-Posudzovatel]
+        rules: [BR-003]
+        scenarios: [SC-002-01, SC-002-04]
+      parameters:
+        - name: stav
+          in: query
+          required: false
+          description: Filter podľa stavu ticketu.
+          schema: { $ref: "#/components/schemas/StavTicketu" }
+        - $ref: "#/components/parameters/CorrelationId"
+      responses:
+        "200":
+          description: Zoznam ticketov (môže byť prázdny).
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [polozky]
+                properties:
+                  polozky:
+                    type: array
+                    items: { $ref: "#/components/schemas/Ticket" }
+        "401": { $ref: "#/components/responses/Neprihlaseny" }
+
+  /tickets/{ticketId}:
+    get:
+      operationId: detailTicketu
+      tags: [Tickety]
+      summary: Detail a aktuálny stav ticketu
+      description: |
+        Ticket, ktorý používateľ nesmie vidieť, sa správa ako neexistujúci – vracia 404, nie 403 (BR-003, SC-002-04).
+      x-sdd:
+        roles: [ROLE-Ziadatel, ROLE-Posudzovatel]
+        rules: [BR-003, BR-007]
+        scenarios: [SC-002-03, SC-002-04, SC-002-06, SC-002-11]
+      parameters:
+        - $ref: "#/components/parameters/TicketId"
+        - $ref: "#/components/parameters/CorrelationId"
+      responses:
+        "200":
+          description: Ticket.
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Ticket" }
+        "401": { $ref: "#/components/responses/Neprihlaseny" }
+        "404": { $ref: "#/components/responses/NenajdenyAleboSkryty" }
+
+  /tickets/{ticketId}/prevzatie:
+    post:
+      operationId: prevziatTicket
+      tags: [Tickety]
+      summary: Posudzovateľ prevezme ticket
+      description: |
+        Prechod `podany → v_posudzovani` (BR-004). Smie iba adresát ticketu v role Posudzovateľ (BR-002).
+        Už prevzatý ticket nemožno prevziať znova – 409 (BR-004, Q-19).
+        Pri prevzatí sa notifikácia neposiela (BR-007, Q-07).
+      x-sdd:
+        roles: [ROLE-Posudzovatel]
+        rules: [BR-002, BR-004, BR-001]
+        scenarios: [SC-002-03]
+        lifecycle: "podany → v_posudzovani"
+      parameters:
+        - $ref: "#/components/parameters/TicketId"
+        - $ref: "#/components/parameters/CorrelationId"
+      responses:
+        "200":
+          description: Ticket je V posudzovaní.
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Ticket" }
+        "401": { $ref: "#/components/responses/Neprihlaseny" }
+        "403": { $ref: "#/components/responses/BezOpravnenia" }
+        "404": { $ref: "#/components/responses/NenajdenyAleboSkryty" }
+        "409": { $ref: "#/components/responses/KonfliktStavu" }
+
+  /tickets/{ticketId}/rozhodnutie:
+    post:
+      operationId: rozhodnutTicket
+      tags: [Tickety]
+      summary: Posudzovateľ schváli alebo zamietne ticket
+      description: |
+        Prechod `v_posudzovani → schvaleny | zamietnuty` (BR-004). Rozhodnúť smie iba posudzovateľ, ktorý ticket prevzal;
+        iný adresát (napr. kolega zo ŠO) dostane 403 (BR-004, Q-19). Pri zamietnutí je odôvodnenie povinné (BR-006).
+        Rozhodnutý ticket sa už nemení; pri súbehu platí prvé rozhodnutie, ďalšie dostane 409 (BR-001).
+        Po rozhodnutí sa žiadateľovi odošle notifikácia; jej zlyhanie nemení výsledok tejto operácie (BR-007, ADR-003).
+      x-sdd:
+        roles: [ROLE-Posudzovatel]
+        rules: [BR-001, BR-002, BR-004, BR-006, BR-007]
+        scenarios: [SC-002-05, SC-002-06, SC-002-07, SC-002-08, SC-002-09, SC-002-11]
+        lifecycle: "v_posudzovani → schvaleny | zamietnuty"
+      parameters:
+        - $ref: "#/components/parameters/TicketId"
+        - $ref: "#/components/parameters/CorrelationId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/Rozhodnutie" }
+      responses:
+        "200":
+          description: Rozhodnutie je zaznamenané.
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Ticket" }
+        "401": { $ref: "#/components/responses/Neprihlaseny" }
+        "403": { $ref: "#/components/responses/BezOpravnenia" }
+        "404": { $ref: "#/components/responses/NenajdenyAleboSkryty" }
+        "409": { $ref: "#/components/responses/KonfliktStavu" }
+        "422": { $ref: "#/components/responses/NeplatneUdaje" }
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: |
+        Token z existujúceho prihlásenia aplikácie Moje štúdium (Q-10a). Obsahuje identitu používateľa a jeho rolu
+        (študent / vyučujúci / zamestnanec študijného oddelenia) – Q-10b.
+
+  parameters:
+    TicketId:
+      name: ticketId
+      in: path
+      required: true
+      schema: { type: string, format: uuid }
+    IdempotencyKey:
+      name: Idempotency-Key
+      in: header
+      required: true
+      description: Jednoznačný kľúč odoslania, ktorý vytvorí klient (Q-11). Rovnaký kľúč nevytvorí druhý ticket.
+      schema: { type: string, minLength: 8, maxLength: 128 }
+    CorrelationId:
+      name: X-Correlation-ID
+      in: header
+      required: false
+      schema: { type: string, maxLength: 128 }
+
+  headers:
+    CorrelationId:
+      description: Korelačný identifikátor požiadavky.
+      schema: { type: string }
+
+  schemas:
+    StavTicketu:
+      type: string
+      description: Stav podľa lifecycle DO-Ticket.
+      enum: [podany, v_posudzovani, schvaleny, zamietnuty]
+
+    Adresat:
+      type: object
+      description: Komu je ticket určený (Q-03).
+      required: [typ]
+      properties:
+        typ:
+          type: string
+          enum: [vyucujuci, studijne_oddelenie]
+        vyucujuciId:
+          type: string
+          description: Identifikátor vyučujúceho z existujúcej identity; povinný, ak typ = vyucujuci.
+      oneOf:
+        - properties: { typ: { const: vyucujuci } }
+          required: [vyucujuciId]
+        - properties: { typ: { const: studijne_oddelenie } }
+          not: { required: [vyucujuciId] }
+
+    NovyTicket:
+      type: object
+      description: Údaje pri podaní ticketu – povinné predmet, popis, adresát; bez príloh (BR-005, Q-05).
+      additionalProperties: false
+      required: [predmet, popis, adresat]
+      properties:
+        predmet: { type: string, minLength: 1, maxLength: 200 }
+        popis: { type: string, minLength: 1, maxLength: 5000 }
+        adresat: { $ref: "#/components/schemas/Adresat" }
+
+    Rozhodnutie:
+      type: object
+      description: Rozhodnutie posudzovateľa; pri zamietnutí je odôvodnenie povinné (BR-006).
+      additionalProperties: false
+      required: [vysledok]
+      properties:
+        vysledok:
+          type: string
+          enum: [schvaleny, zamietnuty]
+        odovodnenie: { type: string, minLength: 1, maxLength: 2000 }
+      if:
+        properties: { vysledok: { const: zamietnuty } }
+      then:
+        required: [odovodnenie]
+
+    Ticket:
+      type: object
+      description: DO-Ticket – iba údaje potrebné pre žiadateľa a adresáta (BR-003). Auditná história sa nevracia (QR-002).
+      required: [id, predmet, popis, adresat, stav, ziadatelId, casPodania, casZmenyStavu]
+      properties:
+        id: { type: string, format: uuid }
+        predmet: { type: string }
+        popis: { type: string }
+        adresat: { $ref: "#/components/schemas/Adresat" }
+        stav: { $ref: "#/components/schemas/StavTicketu" }
+        ziadatelId: { type: string }
+        posudzovatelId:
+          type: [string, "null"]
+          description: Kto ticket prevzal; null v stave podany.
+        odovodnenie:
+          type: [string, "null"]
+        casPodania: { type: string, format: date-time }
+        casZmenyStavu: { type: string, format: date-time }
+
+    Problem:
+      type: object
+      description: RFC 9457 problem details; `pravidlo` uvádza ID porušeného pravidla.
+      required: [type, title, status]
+      properties:
+        type: { type: string }
+        title: { type: string }
+        status: { type: integer }
+        detail: { type: string }
+        pravidlo:
+          type: string
+          description: ID pravidla, napr. BR-001, BR-005.
+        chybajuceUdaje:
+          type: array
+          items: { type: string }
+          description: Pri 422 – ktoré údaje chýbajú alebo sú neplatné (SC-002-02).
+
+  responses:
+    Neprihlaseny:
+      description: Chýba alebo je neplatné prihlásenie (QR-001).
+      content:
+        application/problem+json:
+          schema: { $ref: "#/components/schemas/Problem" }
+    BezOpravnenia:
+      description: Používateľ ticket vidí alebo je prihlásený, ale na akciu nemá oprávnenie (BR-002), napr. žiadateľ chce rozhodnúť.
+      content:
+        application/problem+json:
+          schema: { $ref: "#/components/schemas/Problem" }
+    NenajdenyAleboSkryty:
+      description: Ticket neexistuje alebo ho používateľ nesmie vidieť (BR-003).
+      content:
+        application/problem+json:
+          schema: { $ref: "#/components/schemas/Problem" }
+    KonfliktStavu:
+      description: Prechod nie je v aktuálnom stave dovolený (BR-001, BR-004); stav ticketu sa nezmenil.
+      content:
+        application/problem+json:
+          schema: { $ref: "#/components/schemas/Problem" }
+    KonfliktKluca:
+      description: Idempotency-Key už bol použitý s iným obsahom ticketu (Q-11).
+      content:
+        application/problem+json:
+          schema: { $ref: "#/components/schemas/Problem" }
+    NeplatneUdaje:
+      description: Chýbajúce alebo neplatné údaje (BR-005, BR-006); nič sa nezmenilo.
+      content:
+        application/problem+json:
+          schema: { $ref: "#/components/schemas/Problem" }

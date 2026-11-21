@@ -1,0 +1,10 @@
+fastapi
+uvicorn
+pydantic
+
+# testy
+pytest
+httpx
+pyyaml
+jsonschema
+openapi-spec-validator
