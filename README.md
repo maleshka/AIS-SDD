@@ -19,17 +19,6 @@ Specification **0.2.1 – approved** (Anna-Mariia Malesh, 2026-11-21) · Contrac
 | 7 Implementácia a overenie | candidate code + 26 testov PASS; VERIFY: 16 PASS, 3 FAIL, 3 UNKNOWN | src/, tests/, reports/ |
 
 
-## Čo ešte zostáva (človek)
-
-Podľa [VERIFY_CHANGE reportu](reports/2026-11-21-VERIFY_CHANGE-R-002.md):
-
-1. **Q-09** – v Sparx EA doplniť väzbu `Backend mobilnej brány —Realization→ Mobilná brána`.
-2. **Q-18** – doplniť vlastníkov (`owner: null`) pri C-001, BR-003 a QR-001…QR-005.
-3. **Git a pull request** – spojiť specification, contract, code, tests a reporty do jedného PR a po review označiť baseline.
-4. Potvrdiť business význam zmeny (DoD IMPLEMENT_CHANGE).
-
-Neblokujúce: Q-15 (čísla kvality), Q-16 (schválenie GAP Analysis), Q-17 (Enterprise Continuum – vlastníci, verzie).
-
 ## Priebeh (reporty)
 
 PREPARE_SPEC → DESIGN_CONTRACT → schválenie contractu → IMPLEMENT_CHANGE (plán) → VERIFY_CHANGE – všetko v [reports/](reports/).
