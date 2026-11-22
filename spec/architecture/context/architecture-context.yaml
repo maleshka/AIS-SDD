@@ -151,6 +151,7 @@ relationship_notes:
   - { from: "NODE-ServerMobilnejBrany", type: "Assignment", to: "ART-BackendMobilnejBrany", source_view: "Technology TO BE" }
   - { from: "NODE-ServerMobilnejBrany", type: "Realization", to: "TS-APIMobilnejBrany", source_view: "Technology TO BE" }
   - { from: "LOC-DataCenterSTU", type: "Aggregation", to: "NODE-ServerMobilnejBrany", source_view: "Technology TO BE" }
+  - { from: "ART-BackendMobilnejBrany", type: "Realization", to: "AC-MobilnaBrana", source_view: "Technology usage TO BE" }
 
 model_findings:
   # Nezrovnalosti zistené pri čítaní modelu – na rozhodnutie človeka (pozri spec/drafts/open-questions.md).
@@ -161,8 +162,8 @@ model_findings:
     question: "Q-01"
   - id: "MF-02"
     description: >
-      V modeli chýba väzba Realization z ART-BackendMobilnejBrany na AC-MobilnaBrana
-      (Implementation and Deployment Viewpoint neexistuje).
+      Väzba Realization z ART-BackendMobilnejBrany na AC-MobilnaBrana doplnená v modeli
+      (Technology Usage Viewpoint TO BE) – Q-09, Anna-Mariia Malesh, 2026-11-22.
     question: "Q-09"
   - id: "MF-03"
     description: >

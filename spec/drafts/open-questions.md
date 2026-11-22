@@ -22,6 +22,7 @@ Stav súborov (`draft` → `approved`) a ADR (`Proposed` → `Accepted`) mení �
 | Q-10b | Odkiaľ brána pozná rolu | Identitu a rolu dodá existujúce prihlásenie; v testoch testovací token | Anna-Mariia Malesh, 2026-11-21 | contract-design-profile.yaml, QR-001 |
 | Q-11 | Opakované odoslanie a súbeh | **Ochrana proti duplicite** (`Idempotency-Key` pri vytvorení); pri súbehu rozhodnutí platí prvé (BR-001) | Anna-Mariia Malesh, 2026-11-21 | contract-design-profile.yaml, BR-001, SC-002-10 |
 | Q-19 | Kto rozhoduje prevzatý ticket (najmä pri adresátovi ŠO) | **Iba posudzovateľ, ktorý ticket prevzal**; iný ho už prevziať ani rozhodnúť nemôže | Anna-Mariia Malesh, 2026-11-21 | BR-004 (0.2.1), API-Tickets rozhodnutTicket |
+| Q-09 | Väzba Backend mobilnej brány → Mobilná brána v modeli | **Doplnená v EA** (Technology Usage Viewpoint TO BE) | Anna-Mariia Malesh, 2026-11-22 | deployment.yaml, architecture-context.yaml |
 | Q-13 | Komunikačný štýl klient ↔ brána | **Synchrónne REST / HTTPS + JSON** | Anna-Mariia Malesh, 2026-11-21 | ADR-002, interactions.yaml |
 | Q-14a | Technológia candidate code | Python + FastAPI, relačná DB (SQLite v testoch) | Anna-Mariia Malesh, 2026-11-21 | ADR-004 |
 | Q-15 | Výkon a dostupnosť | Čísla sa neurčujú – **nie je predmetom tohto výrezu** | Anna-Mariia Malesh, 2026-11-22 | QR-005 (not applicable) |
@@ -30,8 +31,4 @@ Stav súborov (`draft` → `approved`) a ADR (`Proposed` → `Accepted`) mení �
 | Q-18 | Vlastníci | C-001, BR-003, QR-001, QR-004, QR-006: **Študijné oddelenie** (ACT-ZamestnanecSO); QR-002, QR-003, QR-005: **Solution Architect** | Anna-Mariia Malesh, 2026-11-22 | requirements.yaml, business-rules.yaml, quality-requirements.yaml |
 | Q-20 | Doba uchovávania ticketov | **Do konca štúdia študenta**, potom sa ticket vymaže | Anna-Mariia Malesh, 2026-11-22 | QR-006 (nové, spec 0.3.0) |
 
-## Rozpracované
-
-### Q-09 Deployment väzba v modeli
-V modeli chýba `ART-BackendMobilnejBrany —Realization→ AC-MobilnaBrana`. **Doplní Anna-Mariia Malesh v Sparx EA** (dohodnuté 2026-11-22)
-a znova exportuje *Technology Viewpoint TO BE*. Potom sa v deployment.yaml odstráni označenie NEOVERENÉ.
+Všetky otázky sú uzavreté.

@@ -54,7 +54,7 @@ traces:
 
   # Technológia a migrácia
   - { from: "DO-Ticket", to: "ART-DatabazaMobilnejBrany", meaning: "Ticket je fyzicky uložený v databáze mobilnej brány." }
-  - { from: "AC-MobilnaBrana", to: "ART-BackendMobilnejBrany", meaning: "Backend realizuje komponent (v modeli chýba – Q-09)." }
+  - { from: "AC-MobilnaBrana", to: "ART-BackendMobilnejBrany", meaning: "Backend realizuje komponent (Technology Usage Viewpoint TO BE, Q-09)." }
   - { from: "AS-Notifikacie", to: "TS-NotifikacnaSluzba", meaning: "Notifikácie doručuje notifikačná služba (FCM)." }
   - { from: "GAP-004", to: "R-002", meaning: "Gap Chýbajúca správa ticketov je riešený Requirementom R-002." }
   - { from: "D-005", to: "GAP-004", meaning: "Deliverable Modul ticketov uzatvára gap." }

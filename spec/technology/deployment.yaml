@@ -5,7 +5,7 @@ artifacts:
   - id: "ART-BackendMobilnejBrany"
     name: "Backend mobilnej brány"
     realizes: "AC-MobilnaBrana"
-    realizes_source: "NEOVERENÉ – väzba Artifact → Component v modeli chýba (Q-09, MF-02)"
+    realizes_source: "Realization v modeli B-01 (Technology Usage Viewpoint TO BE) – Q-09, Anna-Mariia Malesh, 2026-11-22"
     deployed_on: "NODE-ServerMobilnejBrany"     # Assignment v Technology TO BE
     runs_on_system_software: "SSW-AplikacnyServer"
     uses_technology_services: ["TS-HostingMobilnejBrany", "TS-NotifikacnaSluzba"]
