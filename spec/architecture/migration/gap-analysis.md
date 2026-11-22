@@ -1,9 +1,9 @@
 # GAP Analysis
 
-Status: **PERFORMED IN MODEL – APPROVAL PENDING** (Q-16)
+Status: **PERFORMED IN MODEL – APPROVED BY TEAM** (Anna-Mariia Malesh, 2026-11-22, Q-16)
 
 Gaps sú spracované v modeli B-01 (diagram *Gap Analysis*, prvky Gap s typom zmeny v poznámke).
-Kým človek nepotvrdí schválenie, obsah sa nepovažuje za schválený. AI nové gaps ani requirements z rozdielov nevytvára.
+GAP Analysis je spracovaná v modeli a schválená tímom. AI nové gaps ani requirements z rozdielov nevytvára.
 
 Porovnávané Plateaus:
 
@@ -41,6 +41,5 @@ oddelení* → GAP *Chýbajúca správa ticketov* → TO-BE *Vybavovanie ticketu
 ## Čo chýba
 
 - Explicitné označenie ZHODA / ZMENA / NOVÉ / ODSTRÁNENÉ priamo v matici (typ je zatiaľ iba v poznámkach prvkov Gap).
-- Záznam schválenia GAP Analysis (kto, kedy).
 
 Nevyriešený gap blokuje iba zmenu, ktorá od neho závisí. R-002 má vlastný Requirement, preto ho neblokuje.

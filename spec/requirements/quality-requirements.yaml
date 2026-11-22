@@ -9,7 +9,7 @@ quality_requirements:
       Každá operácia so službou Správa ticketov vyžaduje prihláseného používateľa (existujúce prihlásenie aplikácie)
       a overuje oprávnenie podľa BR-002 a BR-003.
     measure: "Požiadavka bez platného prihlásenia alebo bez oprávnenia je odmietnutá a nič nezmení."
-    owner: null
+    owner: "ACT-ZamestnanecSO"   # Q-18
     source: "rozhodnutia Q-10a, Q-10b (Anna-Mariia Malesh, 2026-11-21); C-001"
     status: "approved"
 
@@ -18,7 +18,7 @@ quality_requirements:
     statement: >
       Každá zmena stavu ticketu zaznamená, kto ju vykonal, kedy, z akého a do akého stavu.
     measure: "Pre každý prechod lifecycle existuje auditný záznam."
-    owner: null
+    owner: "Solution Architect – Anna-Mariia Malesh"   # Q-18
     source: "rozhodnutie Q-08 (Anna-Mariia Malesh, 2026-11-21)"
     status: "approved"
 
@@ -27,7 +27,7 @@ quality_requirements:
     statement: >
       Zlyhanie doručenia notifikácie neruší zmenu stavu ticketu a je zaznamenané.
     measure: "Pri nedostupnej notifikačnej službe je rozhodnutie uložené a zlyhanie zaznamenané."
-    owner: null
+    owner: "Solution Architect – Anna-Mariia Malesh"   # Q-18
     source: "rozhodnutie Q-07 (Anna-Mariia Malesh, 2026-11-21), ADR-003"
     status: "approved"
 
@@ -36,14 +36,25 @@ quality_requirements:
     statement: >
       Obsah ticketu (osobné údaje študenta) sa nezapisuje do aplikačného logu a nie je obsahom push notifikácie.
     measure: "Log a notifikácia obsahujú iba identifikátor ticketu a stav."
-    owner: null
-    source: "návrh AI z C-001 – potvrdiť"
+    owner: "ACT-ZamestnanecSO"   # Q-18
+    source: "C-001; potvrdené Q-18 (Anna-Mariia Malesh, 2026-11-22)"
     status: "approved"
 
   - id: "QR-005"
     category: "performance"
-    statement: "Čas odpovede a dostupnosť služby nie sú určené."
+    statement: "Čas odpovede a dostupnosť služby nie sú predmetom tohto výrezu (Q-15)."
     measure: null
-    owner: null
-    source: "Q-15"
-    status: "open"
+    owner: "Solution Architect – Anna-Mariia Malesh"   # Q-18
+    source: "rozhodnutie Q-15 (Anna-Mariia Malesh, 2026-11-22)"
+    status: "not applicable"
+
+  - id: "QR-006"
+    category: "privacy / retention"
+    statement: >
+      Ticket sa uchováva do konca štúdia študenta (žiadateľa), potom sa vymaže vrátane auditných záznamov.
+    measure: "Po skončení štúdia žiadateľa neexistuje jeho ticket ani audit k nemu."
+    owner: "ACT-ZamestnanecSO"
+    source: "rozhodnutie Q-20 (Anna-Mariia Malesh, 2026-11-22); C-001"
+    realization: "mimo candidate code R-002 – koniec štúdia eviduje UIS, napojenie nie je v rozsahu výrezu"
+    status: "approved"
+    version: "1.0"

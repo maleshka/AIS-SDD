@@ -2,10 +2,10 @@
 # Cesty sa počítajú od koreňa projektu (SDD-Ticket/).
 
 specification:
-  version: "0.2.1"   # 0.2.0 → 0.2.1: BR-004 spresnené rozhodnutím Q-19
+  version: "0.3.0"   # 0.2.1 → 0.3.0: nová QR-006 (uchovávanie), vlastníci Q-18, Q-15/16/17 uzavreté (2026-11-22)
   status: "approved"
   approved_by: "Anna-Mariia Malesh"
-  approved_on: "2026-11-21"
+  approved_on: "2026-11-22"
   architecture_baseline: "B-01"   # Sparx EA model Moje_studium_extended_2026_11_21_v21.qea
   ai_rules_version: "4.0"
   scope:

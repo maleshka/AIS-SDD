@@ -35,7 +35,7 @@ business_rules:
     type: "authorization rule"
     statement: >
       Ticket a jeho stav vidí iba jeho žiadateľ a adresát ticketu (BR-002).
-    owner: null
+    owner: "ACT-ZamestnanecSO"   # Q-18 (Anna-Mariia Malesh, 2026-11-22)
     source: "C-001 (GDPR); rozhodnutie Q-08 (Anna-Mariia Malesh, 2026-11-21)"
     requirements: ["R-002"]
     constraints: ["C-001"]

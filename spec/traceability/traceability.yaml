@@ -10,6 +10,7 @@ traces:
   - { from: "R-002", to: "OUT-002", meaning: "Requirement realizuje očakávaný výsledok." }
   - { from: "R-002", to: "PRI-001", meaning: "Requirement realizuje princíp vybavovania na jednom mieste." }
   - { from: "C-001", to: "BR-003", meaning: "GDPR obmedzuje, kto smie ticket vidieť." }
+  - { from: "C-001", to: "QR-006", meaning: "GDPR obmedzuje dobu uchovávania ticketu; realizácia mimo candidate code R-002 (koniec štúdia eviduje UIS)." }
 
   # Business
   - { from: "BS-VybavovanieTicketov", to: "R-002", meaning: "Business služba realizuje Requirement." }

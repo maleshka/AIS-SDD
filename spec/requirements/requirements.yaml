@@ -49,7 +49,7 @@ requirements:
       vybavenia (ASM-003, BP-ASIS-VybaveniePoziadavky). E-mailový a osobný postup ostáva ako alternatíva (GAP-004).
     source_goals: ["G-002"]
     realizes: ["OUT-002", "PRI-001"]
-    owner: "ROLE-Posudzovatel"   # návrh: vlastník významu – potvrdiť pri review
+    owner: "ROLE-Posudzovatel"
     priority: "must"
     status: "approved"
     version: "1.0"
@@ -77,6 +77,6 @@ requirements:
 constraints:
   - id: "C-001"
     statement: "Zobrazenie a spracovanie osobných údajov musí rešpektovať GDPR."
-    owner: null   # vlastník nie je v modeli určený – doplní človek (napr. ACT-ZamestnanecSO / zodpovedná osoba GDPR)
+    owner: "ACT-ZamestnanecSO"   # Q-18 (Anna-Mariia Malesh, 2026-11-22)
     status: "approved"
     related_contracts: ["CTR-001"]

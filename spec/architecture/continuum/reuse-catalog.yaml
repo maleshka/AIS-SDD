@@ -1,5 +1,5 @@
 # Enterprise Continuum – reuse katalóg (prevzaté z modelu B-01, diagram Enterprise Continuum, tagged values EC_*).
-# Hodnoty UNKNOWN sú v modeli UNKNOWN; AI ich nedopĺňa. Vlastníka, verziu a zrelosť potvrdí človek (Q-17).
+# Vlastník, verzia a zrelosť existujúcich SBB doplnené rozhodnutím Q-17 (Anna-Mariia Malesh, 2026-11-22); ostatné UNKNOWN ostávajú z modelu.
 # Väzba SBB → ABB je v modeli Realization.
 
 reuse_candidates:
@@ -14,9 +14,9 @@ reuse_candidates:
       continuum: "Solutions Continuum"
       level: "Organization-Specific"
     source: "model B-01 – existujúca mobilná brána (AS-IS)"
-    owner: "UNKNOWN"
-    version: "UNKNOWN"
-    maturity: "Existujúca, v prevádzke (len čítanie)"
+    owner: "FIIT STU / STU"   # Q-17
+    version: "aktuálna produkčná"
+    maturity: "v prevádzke"
     reuse_decision: "Upraviť – rozšíriť existujúcu bránu o zápis do UIS (model); pre R-002 aj o evidenciu ticketov"
     why_sbb_realizes_abb: >
       Mobilná brána je jediný vstupný bod aplikácie Moje štúdium k backendu (AIF-APIBrany), agreguje dáta a integruje
@@ -52,9 +52,9 @@ reuse_candidates:
       model_element: "NODE-FCM"
       level: "Common Systems Solutions"
     source: "model B-01"
-    owner: "UNKNOWN"
-    version: "UNKNOWN"
-    maturity: "UNKNOWN (AS-IS notifikácie sa už posielajú push – Capability Push notifikácie o štúdiu)"
+    owner: "Google"   # Q-17
+    version: "aktuálna (cloudová služba)"
+    maturity: "v prevádzke"
     reuse_decision: "UNKNOWN – rozhodne architekt"
     why_sbb_realizes_abb: "Firebase Cloud Messaging doručuje push notifikácie na Android/iOS zariadenia."
     relevant_for_r002: true
@@ -65,9 +65,9 @@ reuse_candidates:
       name: "ABB Mobilná študentská aplikácia FIIT"
       level: "Organization-Specific"
     sbb: { id: "SBB-MojeStudium", model_element: "AC-MojeStudium" }
-    owner: "FIIT STU (UNKNOWN konkrétna osoba)"
-    version: "UNKNOWN"
-    maturity: "UNKNOWN"
+    owner: "FIIT STU / STU"   # Q-17
+    version: "aktuálna produkčná"
+    maturity: "v prevádzke"
     reuse_decision: "UNKNOWN – rozhodne architekt"
     relevant_for_r002: true
     status: "draft"
@@ -77,9 +77,9 @@ reuse_candidates:
       name: "ABB Študijný informačný systém vysokej školy"
       level: "Industry"
     sbb: { id: "SBB-UIS", model_element: "AC-UIS" }
-    owner: "UNKNOWN"
-    version: "UNKNOWN"
-    maturity: "UNKNOWN"
+    owner: "FIIT STU / STU"   # Q-17
+    version: "aktuálna produkčná"
+    maturity: "v prevádzke"
     reuse_decision: "UNKNOWN – rozhodne architekt"
     relevant_for_r002: false
     status: "draft"

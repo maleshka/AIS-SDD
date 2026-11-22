@@ -4,7 +4,7 @@ Specification-Driven Development balík pre jednu end-to-end funkcionalitu: **š
 schválenie alebo zamietnutie**. Nadväzuje na architektonický model v Sparx EA
 (`Moje_studium_extended_2026_11_21_v21.qea`, baseline **B-01**).
 
-Specification **0.2.1 – approved** (Anna-Mariia Malesh, 2026-11-21) · Contract **API-Tickets 0.1.0 – approved**.
+Specification **0.3.0 – approved** (Anna-Mariia Malesh, 2026-11-22) · Contract **API-Tickets 0.1.0 – approved**.
 
 ## Stav etáp
 
