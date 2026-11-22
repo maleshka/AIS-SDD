@@ -33,6 +33,16 @@ python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
 
 Výsledok overenia: [reports/2026-11-21-VERIFY_CHANGE-R-002.md](reports/2026-11-21-VERIFY_CHANGE-R-002.md).
 
+## Ukážka v prehliadači
+
+```bash
+.venv/bin/python demo.py
+```
+
+Otvor http://127.0.0.1:8000/docs. Pri operácii klikni *Try it out* a do poľa `authorization` napíš
+`Bearer t-student-1` (študent), `Bearer t-so-1` (študijné oddelenie) alebo `Bearer t-vyucujuci-1`.
+Prihlásenie a notifikácie sú ukážkové (rovnaké ako v testoch); notifikácie sa vypisujú do terminálu.
+
 ## Kontrola balíka
 
 ```bash
