@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="sk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Moje štúdium – Tickety (demo)</title>
+<style>
+  :root {
+    --bg: #eef1f5; --card: #fff; --ink: #1b2a3d; --muted: #6b7686; --line: #dde2e9;
+    --brand: #1f3b5c; --accent: #3d8a7a;
+    --podany: #6b7686; --v_posudzovani: #d39a2c; --schvaleny: #2f8f5b; --zamietnuty: #c0453a;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font: 15px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif; background: var(--bg); color: var(--ink); }
+  header { background: var(--brand); color: #fff; padding: 14px 24px; display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; }
+  header h1 { font-size: 18px; margin: 0; }
+  header span { opacity: .75; font-size: 13px; }
+  main { display: grid; grid-template-columns: 400px 1fr; gap: 24px; padding: 24px; max-width: 1280px; margin: 0 auto; }
+  @media (max-width: 900px) { main { grid-template-columns: 1fr; padding: 16px; } }
+
+  .phone { background: #111; border-radius: 36px; padding: 12px; box-shadow: 0 10px 30px rgba(0,0,0,.18); align-self: start; }
+  .screen { background: var(--bg); border-radius: 26px; overflow: hidden; min-height: 720px; display: flex; flex-direction: column; }
+  .appbar { background: var(--accent); color: #fff; padding: 18px 18px 14px; }
+  .appbar h2 { margin: 0; font-size: 17px; }
+  .appbar small { opacity: .85; }
+  .scroll { padding: 14px; overflow-y: auto; flex: 1; max-height: 640px; }
+
+  .panel { background: var(--card); border-radius: 14px; padding: 18px 20px; box-shadow: 0 1px 3px rgba(0,0,0,.06); align-self: start; }
+  .panel h2 { margin: 0 0 4px; font-size: 18px; }
+  .row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .sub { color: var(--muted); font-size: 13px; }
+
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; margin-bottom: 10px; }
+  .card h3 { margin: 0 0 4px; font-size: 15px; }
+  .card p { margin: 4px 0; }
+  .meta { color: var(--muted); font-size: 12px; }
+  .badge { display: inline-block; padding: 2px 9px; border-radius: 999px; font-size: 12px; font-weight: 600; color: #fff; white-space: nowrap; }
+  .reason { background: #fbeceb; border-left: 3px solid var(--zamietnuty); padding: 6px 9px; border-radius: 6px; font-size: 13px; }
+
+  label { display: block; font-size: 13px; color: var(--muted); margin: 8px 0 3px; }
+  input, textarea, select { width: 100%; font: inherit; padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; background: #fff; color: var(--ink); }
+  textarea { min-height: 70px; resize: vertical; }
+  button { font: inherit; border: 0; border-radius: 8px; padding: 8px 14px; cursor: pointer; background: var(--brand); color: #fff; }
+  button.ok { background: var(--schvaleny); } button.no { background: var(--zamietnuty); } button.ghost { background: #e4e8ee; color: var(--ink); }
+  button:disabled { opacity: .45; cursor: default; }
+  .full { width: 100%; margin-top: 12px; }
+
+  .tabs { display: flex; gap: 6px; margin: 12px 0 14px; }
+  .tabs button { background: #e4e8ee; color: var(--ink); padding: 6px 12px; }
+  .tabs button.on { background: var(--brand); color: #fff; }
+
+  .notif { background: #fff7e0; border: 1px solid #f0d48a; border-radius: 10px; padding: 8px 11px; margin-bottom: 8px; font-size: 13px; }
+  .empty { color: var(--muted); text-align: center; padding: 18px 0; font-size: 14px; }
+
+  #toast { position: fixed; right: 20px; bottom: 20px; max-width: 420px; padding: 12px 16px; border-radius: 10px; color: #fff; box-shadow: 0 6px 20px rgba(0,0,0,.2); display: none; z-index: 10; }
+  #toast.err { background: #a63a31; } #toast.ok { background: #2f6f53; }
+  #toast code { background: rgba(255,255,255,.18); padding: 1px 5px; border-radius: 4px; }
+
+  .log { font: 12px/1.5 ui-monospace, Menlo, monospace; background: #0f1b2a; color: #cfe3ff; border-radius: 10px; padding: 10px 12px; margin-top: 18px; max-height: 190px; overflow-y: auto; }
+  .log .s2 { color: #7fd6a4; } .log .s4 { color: #ff9e93; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Moje štúdium – správa ticketov</h1>
+  <span>Ukážka R-002 · všetky akcie idú cez API-Tickets 0.1.0 (Mobilná brána)</span>
+</header>
+
+<main>
+  <!-- ŠTUDENT – mobilná aplikácia -->
+  <div class="phone"><div class="screen">
+    <div class="appbar">
+      <h2>Moje štúdium</h2>
+      <div class="row" style="margin-top:8px">
+        <small>Prihlásený:</small>
+        <select id="student" style="width:auto;padding:3px 6px;font-size:13px">
+          <option value="t-student-1">Študent 1 (stu-1)</option>
+          <option value="t-student-2">Študent 2 (stu-2)</option>
+        </select>
+      </div>
+    </div>
+    <div class="scroll">
+      <div id="notifs"></div>
+
+      <div class="card">
+        <h3>Nový ticket</h3>
+        <label for="predmet">Predmet</label>
+        <input id="predmet" maxlength="200" placeholder="napr. Predĺženie termínu zadania">
+        <label for="popis">Popis</label>
+        <textarea id="popis" maxlength="5000" placeholder="Čo potrebuješ vybaviť…"></textarea>
+        <label for="adresat">Adresát</label>
+        <select id="adresat">
+          <option value="vyu-1">Vyučujúci (vyu-1)</option>
+          <option value="so">Študijné oddelenie</option>
+        </select>
+        <button class="full" id="podat">Odoslať ticket</button>
+      </div>
+
+      <h3 style="margin:16px 4px 8px;font-size:15px">Moje tickety</h3>
+      <div id="mojeTickety"></div>
+    </div>
+  </div></div>
+
+  <!-- POSUDZOVATEĽ -->
+  <section class="panel">
+    <div class="row" style="justify-content:space-between">
+      <div>
+        <h2>Posudzovanie ticketov</h2>
+        <div class="sub">Vyučujúci alebo zamestnanec študijného oddelenia</div>
+      </div>
+      <select id="posudzovatel" style="width:auto">
+        <option value="t-vyucujuci-1">Vyučujúci (vyu-1)</option>
+        <option value="t-so-1">Študijné oddelenie – so-1</option>
+        <option value="t-so-2">Študijné oddelenie – so-2</option>
+      </select>
+    </div>
+
+    <div class="tabs" id="filter">
+      <button data-stav="" class="on">Všetky</button>
+      <button data-stav="podany">Podané</button>
+      <button data-stav="v_posudzovani">V posudzovaní</button>
+      <button data-stav="schvaleny">Schválené</button>
+      <button data-stav="zamietnuty">Zamietnuté</button>
+    </div>
+
+    <div id="tickety"></div>
+
+    <div class="sub" style="margin-top:14px">Volania API (posledné hore)</div>
+    <div class="log" id="log"></div>
+  </section>
+</main>
+
+<div id="toast"></div>
+
+<script>
+const STAV = {
+  podany: "Podaný", v_posudzovani: "V posudzovaní", schvaleny: "Schválený", zamietnuty: "Zamietnutý"
+};
+const $ = id => document.getElementById(id);
+let filterStav = "";
+let notifSeen = 0;
+
+function esc(s) { return String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+function badge(stav) { return `<span class="badge" style="background:var(--${stav})">${STAV[stav]}</span>`; }
+function cas(iso) { return iso ? new Date(iso).toLocaleString("sk-SK", {day:"numeric",month:"numeric",hour:"2-digit",minute:"2-digit"}) : ""; }
+function adresat(a) { return a.typ === "vyucujuci" ? `vyučujúci ${esc(a.vyucujuciId)}` : "študijné oddelenie"; }
+
+function log(method, path, status) {
+  const el = document.createElement("div");
+  el.innerHTML = `<span class="${status < 400 ? "s2" : "s4"}">${status}</span> ${method} ${esc(path)}`;
+  $("log").prepend(el);
+}
+function toast(msg, ok) {
+  const t = $("toast"); t.innerHTML = msg; t.className = ok ? "ok" : "err"; t.style.display = "block";
+  clearTimeout(t._h); t._h = setTimeout(() => t.style.display = "none", 4500);
+}
+
+async function api(token, method, path, body, extraHeaders = {}, quiet = false) {
+  const opts = { method, headers: { "Authorization": "Bearer " + token, ...extraHeaders } };
+  if (body) { opts.headers["Content-Type"] = "application/json"; opts.body = JSON.stringify(body); }
+  const r = await fetch("/api/v1" + path, opts);
+  const data = await r.json().catch(() => ({}));
+  if (!quiet) log(method, "/api/v1" + path, r.status);
+  if (!r.ok) {
+    let msg = `<b>${r.status} – ${esc(data.title || "Chyba")}</b>`;
+    if (data.pravidlo) msg += ` · pravidlo <code>${esc(data.pravidlo)}</code>`;
+    if (data.detail) msg += `<br>${esc(data.detail)}`;
+    if (data.chybajuceUdaje) msg += `<br>Chýba: ${data.chybajuceUdaje.map(esc).join(", ")}`;
+    if (!quiet) toast(msg, false);
+    throw data;
+  }
+  return data;
+}
+
+// --- študent ---
+$("podat").onclick = async () => {
+  const a = $("adresat").value;
+  const body = {
+    predmet: $("predmet").value.trim(),
+    popis: $("popis").value.trim(),
+    adresat: a === "so" ? { typ: "studijne_oddelenie" } : { typ: "vyucujuci", vyucujuciId: a }
+  };
+  try {
+    const t = await api($("student").value, "POST", "/tickets", body, { "Idempotency-Key": crypto.randomUUID() });
+    toast(`Ticket „${esc(t.predmet)}“ bol podaný.`, true);
+    $("predmet").value = ""; $("popis").value = "";
+    refresh();
+  } catch (e) {}
+};
+
+async function nacitajStudenta() {
+  const data = await api($("student").value, "GET", "/tickets", null, {}, true);
+  const el = $("mojeTickety");
+  if (!data.polozky.length) { el.innerHTML = `<div class="empty">Zatiaľ žiadne tickety.</div>`; return; }
+  el.innerHTML = data.polozky.map(t => `
+    <div class="card">
+      <div class="row" style="justify-content:space-between"><h3>${esc(t.predmet)}</h3>${badge(t.stav)}</div>
+      <p class="meta">Pre ${adresat(t.adresat)} · podaný ${cas(t.casPodania)}</p>
+      ${t.posudzovatelId ? `<p class="meta">Posudzuje ${esc(t.posudzovatelId)}</p>` : ""}
+      ${t.stav === "zamietnuty" && t.odovodnenie ? `<div class="reason">Dôvod: ${esc(t.odovodnenie)}</div>` : ""}
+    </div>`).join("");
+}
+
+async function nacitajNotifikacie() {
+  const r = await fetch("/demo/notifikacie"); const all = await r.json();
+  const mojeId = $("student").value === "t-student-1" ? "stu-1" : "stu-2";
+  const moje = all.filter(n => n.prijemca === mojeId).slice(-3).reverse();
+  $("notifs").innerHTML = moje.map(n =>
+    `<div class="notif">🔔 Ticket <b>${esc(n.predmet)}</b> je teraz <b>${STAV[n.stav] || esc(n.stav)}</b></div>`).join("");
+  if (all.length > notifSeen && notifSeen) {
+    const n = all[all.length - 1];
+    if (n.prijemca === mojeId) toast(`🔔 Notifikácia: ticket je ${STAV[n.stav]}`, true);
+  }
+  notifSeen = all.length;
+}
+
+// --- posudzovateľ ---
+async function nacitajPosudzovatela() {
+  const q = filterStav ? `?stav=${filterStav}` : "";
+  const data = await api($("posudzovatel").value, "GET", "/tickets" + q, null, {}, true);
+  const el = $("tickety");
+  if (!data.polozky.length) { el.innerHTML = `<div class="empty">Žiadne tickety pre tohto posudzovateľa.</div>`; return; }
+  el.innerHTML = data.polozky.map(t => `
+    <div class="card">
+      <div class="row" style="justify-content:space-between"><h3>${esc(t.predmet)}</h3>${badge(t.stav)}</div>
+      <p>${esc(t.popis)}</p>
+      <p class="meta">Od ${esc(t.ziadatelId)} · pre ${adresat(t.adresat)} · podaný ${cas(t.casPodania)}${t.posudzovatelId ? " · prevzal " + esc(t.posudzovatelId) : ""}</p>
+      ${t.stav === "zamietnuty" && t.odovodnenie ? `<div class="reason">Dôvod: ${esc(t.odovodnenie)}</div>` : ""}
+      <div class="row" style="margin-top:8px">
+        <button class="ghost" onclick="prevziat('${t.id}')">Prevziať</button>
+        <button class="ok" onclick="rozhodnut('${t.id}','schvaleny')">Schváliť</button>
+        <button class="no" onclick="rozhodnut('${t.id}','zamietnuty')">Zamietnuť</button>
+      </div>
+    </div>`).join("");
+}
+
+async function prevziat(id) {
+  try { await api($("posudzovatel").value, "POST", `/tickets/${id}/prevzatie`); toast("Ticket prevzatý – je v posudzovaní.", true); refresh(); } catch (e) {}
+}
+async function rozhodnut(id, vysledok) {
+  const body = { vysledok };
+  if (vysledok === "zamietnuty") {
+    const d = prompt("Dôvod zamietnutia (BR-006):");
+    if (d === null) return;
+    if (d.trim()) body.odovodnenie = d.trim();
+  }
+  try {
+    await api($("posudzovatel").value, "POST", `/tickets/${id}/rozhodnutie`, body);
+    toast(vysledok === "schvaleny" ? "Ticket schválený." : "Ticket zamietnutý.", true); refresh();
+  } catch (e) {}
+}
+
+$("filter").onclick = e => {
+  if (!e.target.dataset || e.target.tagName !== "BUTTON") return;
+  filterStav = e.target.dataset.stav;
+  [...$("filter").children].forEach(b => b.classList.toggle("on", b === e.target));
+  nacitajPosudzovatela();
+};
+$("student").onchange = refresh;
+$("posudzovatel").onchange = refresh;
+
+async function refresh() {
+  try { await Promise.all([nacitajStudenta(), nacitajPosudzovatela(), nacitajNotifikacie()]); } catch (e) {}
+}
+refresh();
+setInterval(refresh, 2500);
+</script>
+</body>
+</html>
