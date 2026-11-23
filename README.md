@@ -16,7 +16,7 @@ Specification **0.3.0 – approved** (Anna-Mariia Malesh, 2026-11-22) · Contrac
 | 4 Správanie, pravidlá, scenáre | approved (Q-03…Q-08, Q-11, Q-19), 11 scenárov | business-rules.yaml, lifecycles.yaml, stories/ |
 | 5 Technológia a deployment | approved | technology/*.yaml, ADR-004 |
 | 6 Contract | **approved** API-Tickets 0.1.0 | contracts/approved/, approval.yaml |
-| 7 Implementácia a overenie | candidate code + 26 testov PASS; VERIFY: 16 PASS, 3 FAIL, 3 UNKNOWN | src/, tests/, reports/ |
+| 7 Implementácia a overenie | candidate code + 26 testov PASS; VERIFY (23. 11.): 19 PASS, 0 FAIL, 0 UNKNOWN, 3 not applicable | src/, tests/, reports/ |
 
 
 ## Priebeh (reporty)

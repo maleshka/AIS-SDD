@@ -58,4 +58,4 @@ implementation:
     - { id: "IE-002", name: "Release MVP" }
     - { id: "IE-003", name: "Spustenie v2.0" }
 
-  status: "draft"   # potvrdí človek
+  status: "approved"   # Anna-Mariia Malesh, 2026-11-23 (zapísané na jej pokyn)
