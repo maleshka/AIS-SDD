@@ -12,7 +12,7 @@ approval:
   approved_by: "Anna-Mariia Malesh"
   approved_by_role: "Solution Architect"
   approved_on: "2026-11-21"
-  approved_in_pull_request: null     # repozitár zatiaľ nemá git / PR
+  approved_in_pull_request: "https://github.com/maleshka/AIS-SDD/pull/1"
   reviewed_items:
     - "business význam operácií (R-002, BP-VybavovanieTicketu)"
     - "component boundary (ADR-001), komunikačný štýl (ADR-002)"
