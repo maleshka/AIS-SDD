@@ -1,7 +1,8 @@
 # Enterprise Continuum – reuse katalóg (prevzaté z modelu B-01, diagram Enterprise Continuum, tagged values EC_*).
-# Vlastník, verzia a zrelosť existujúcich SBB doplnené rozhodnutím Q-17 (Anna-Mariia Malesh, 2026-11-22); ostatné UNKNOWN ostávajú z modelu.
+# Vlastník, verzia a zrelosť existujúcich SBB doplnené rozhodnutím Q-17 (Anna-Mariia Malesh, 2026-11-22);
+# zvyšné hodnoty a reuse rozhodnutia, ktoré model neobsahuje, doplnila Anna-Mariia Malesh 2026-11-23.
 # Väzba SBB → ABB je v modeli Realization.
-# Schválila: Anna-Mariia Malesh, 2026-11-23 (zapísané na jej pokyn). Hodnoty UNKNOWN nie sú v modeli B-01 ani známe tímu; ostávajú zámerne.
+# Schválila: Anna-Mariia Malesh, 2026-11-23 (zapísané na jej pokyn).
 
 reuse_candidates:
   - abb:
@@ -35,10 +36,10 @@ reuse_candidates:
       model_element: "SSW-DatabazovyServer"
       level: "Organization-Specific"
     source: "model B-01"
-    owner: "UNKNOWN"
-    version: "UNKNOWN"
-    maturity: "UNKNOWN"
-    reuse_decision: "UNKNOWN – rozhodne architekt (produkt: ADR-004)"
+    owner: "FIIT STU / STU (Data center STU)"   # Anna-Mariia Malesh, 2026-11-23
+    version: "PostgreSQL (prevádzka), SQLite (testy) – ADR-004"
+    maturity: "nový (TO BE, GAP-001)"
+    reuse_decision: "Nové – zaviesť podľa ADR-004"
     why_sbb_realizes_abb: "Databázový server na serveri mobilnej brány uchováva ART-DatabazaMobilnejBrany s ticketmi."
     relevant_for_r002: true
     status: "approved"
@@ -56,7 +57,7 @@ reuse_candidates:
     owner: "Google"   # Q-17
     version: "aktuálna (cloudová služba)"
     maturity: "v prevádzke"
-    reuse_decision: "UNKNOWN – rozhodne architekt"
+    reuse_decision: "Použiť bez zmeny"   # Anna-Mariia Malesh, 2026-11-23
     why_sbb_realizes_abb: "Firebase Cloud Messaging doručuje push notifikácie na Android/iOS zariadenia."
     relevant_for_r002: true
     status: "approved"
@@ -69,7 +70,7 @@ reuse_candidates:
     owner: "FIIT STU / STU"   # Q-17
     version: "aktuálna produkčná"
     maturity: "v prevádzke"
-    reuse_decision: "UNKNOWN – rozhodne architekt"
+    reuse_decision: "Upraviť – doplniť klient ticketov (AC-ManazmentTicketov)"   # Anna-Mariia Malesh, 2026-11-23
     relevant_for_r002: true
     status: "approved"
 
@@ -81,7 +82,7 @@ reuse_candidates:
     owner: "FIIT STU / STU"   # Q-17
     version: "aktuálna produkčná"
     maturity: "v prevádzke"
-    reuse_decision: "UNKNOWN – rozhodne architekt"
+    reuse_decision: "Použiť bez zmeny (R-002 ho nepoužíva)"   # Anna-Mariia Malesh, 2026-11-23
     relevant_for_r002: false
     status: "approved"
 
@@ -90,13 +91,13 @@ reuse_candidates:
       name: "ABB Výpočtová a hostingová infraštruktúra"
       level: "Foundation"
     sbb: { id: "SBB-IaaS", model_element: "IaaS" }
-    owner: "UNKNOWN"
-    version: "UNKNOWN"
-    maturity: "UNKNOWN"
-    reuse_decision: "UNKNOWN – rozhodne architekt"
+    owner: "STU (Data center STU)"   # Anna-Mariia Malesh, 2026-11-23
+    version: "aktuálna produkčná"
+    maturity: "v prevádzke"
+    reuse_decision: "Použiť bez zmeny"
     relevant_for_r002: false
     status: "approved"
 
 architecture_assets:
-  - { id: "PRI-002", type: "Princíp", level: "Foundation", maturity: "Ustálený", reuse: "Použiť", owner: "UNKNOWN" }
-  - { id: "PRI-003", type: "Štandard", level: "Foundation", maturity: "Ustálený", reuse: "UNKNOWN – potvrdiť, že API je REST", version: "UNKNOWN (OpenAPI?)", owner: "UNKNOWN" }
+  - { id: "PRI-002", type: "Princíp", level: "Foundation", maturity: "Ustálený", reuse: "Použiť", owner: "tím projektu (Solution Architect)" }
+  - { id: "PRI-003", type: "Štandard", level: "Foundation", maturity: "Ustálený", reuse: "Použiť – API-Tickets je REST", version: "OpenAPI 3.1", owner: "tím projektu (Solution Architect)" }

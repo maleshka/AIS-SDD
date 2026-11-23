@@ -21,7 +21,7 @@ Kontroly 1–13, 15 a 18 sa nezmenili oproti 2026-11-21. Testy aj kontrola balí
 | 18 | Deployable Artifact | n/a | **not applicable** | `deployable_artifact_required: false` |
 | 19 | Vlastníci pravidiel a quality requirements | FAIL | **PASS** | Q-18: owner doplnený pri C-001, BR-001…007, QR-001…006 |
 | 20 | Produkčné napojenie identity a FCM | UNKNOWN | **not applicable** | rozhodnutie Anna-Mariia Malesh, 2026-11-23: mimo rozsahu výrezu; v kóde testovacie náhrady podľa ADR-003 a ADR-004 |
-| 21 | Enterprise Continuum, Implementation & Migration | UNKNOWN | **PASS** | reuse-catalog.yaml a implementation-context.yaml schválené (Anna-Mariia Malesh, 2026-11-23); hodnoty UNKNOWN ponechané zámerne, model ani tím ich neuvádza |
+| 21 | Enterprise Continuum, Implementation & Migration | UNKNOWN | **PASS** | reuse-catalog.yaml a implementation-context.yaml schválené (Anna-Mariia Malesh, 2026-11-23); chýbajúci vlastníci, verzie, zrelosť a reuse rozhodnutia doplnené jej rozhodnutím – v balíku nie je žiadna hodnota UNKNOWN |
 | 22 | Jeden konzistentný pull request | FAIL | **PASS po zlúčení** | repozitár github.com/maleshka/AIS-SDD; tento PR (vetva verify/R-002) s reportom, schváleniami a obrázkom; číslo PR v approval.yaml |
 
 **Súhrn:** 19× PASS · 0× FAIL · 0× UNKNOWN · 3× not applicable (14, 18, 20).
