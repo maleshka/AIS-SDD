@@ -1,6 +1,7 @@
 # Enterprise Continuum – reuse katalóg (prevzaté z modelu B-01, diagram Enterprise Continuum, tagged values EC_*).
 # Vlastník, verzia a zrelosť existujúcich SBB doplnené rozhodnutím Q-17 (Anna-Mariia Malesh, 2026-11-22); ostatné UNKNOWN ostávajú z modelu.
 # Väzba SBB → ABB je v modeli Realization.
+# Schválila: Anna-Mariia Malesh, 2026-11-23 (zapísané na jej pokyn). Hodnoty UNKNOWN nie sú v modeli B-01 ani známe tímu; ostávajú zámerne.
 
 reuse_candidates:
   - abb:
@@ -22,7 +23,7 @@ reuse_candidates:
       Mobilná brána je jediný vstupný bod aplikácie Moje štúdium k backendu (AIF-APIBrany), agreguje dáta a integruje
       backend systémy – presne schopnosť, ktorú ABB opisuje.
     relevant_for_r002: true
-    status: "draft"
+    status: "approved"
 
   - abb:
       id: "ABB-Perzistencia"
@@ -40,7 +41,7 @@ reuse_candidates:
     reuse_decision: "UNKNOWN – rozhodne architekt (produkt: ADR-004)"
     why_sbb_realizes_abb: "Databázový server na serveri mobilnej brány uchováva ART-DatabazaMobilnejBrany s ticketmi."
     relevant_for_r002: true
-    status: "draft"
+    status: "approved"
 
   - abb:
       id: "ABB-PushNotifikacie"
@@ -58,7 +59,7 @@ reuse_candidates:
     reuse_decision: "UNKNOWN – rozhodne architekt"
     why_sbb_realizes_abb: "Firebase Cloud Messaging doručuje push notifikácie na Android/iOS zariadenia."
     relevant_for_r002: true
-    status: "draft"
+    status: "approved"
 
   - abb:
       id: "ABB-MobilnaAplikacia"
@@ -70,7 +71,7 @@ reuse_candidates:
     maturity: "v prevádzke"
     reuse_decision: "UNKNOWN – rozhodne architekt"
     relevant_for_r002: true
-    status: "draft"
+    status: "approved"
 
   - abb:
       id: "ABB-StudijnyIS"
@@ -82,7 +83,7 @@ reuse_candidates:
     maturity: "v prevádzke"
     reuse_decision: "UNKNOWN – rozhodne architekt"
     relevant_for_r002: false
-    status: "draft"
+    status: "approved"
 
   - abb:
       id: "ABB-Hosting"
@@ -94,7 +95,7 @@ reuse_candidates:
     maturity: "UNKNOWN"
     reuse_decision: "UNKNOWN – rozhodne architekt"
     relevant_for_r002: false
-    status: "draft"
+    status: "approved"
 
 architecture_assets:
   - { id: "PRI-002", type: "Princíp", level: "Foundation", maturity: "Ustálený", reuse: "Použiť", owner: "UNKNOWN" }
