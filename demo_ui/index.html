@@ -56,8 +56,7 @@
   #toast.err { background: #a63a31; } #toast.ok { background: #2f6f53; }
   #toast code { background: rgba(255,255,255,.18); padding: 1px 5px; border-radius: 4px; }
 
-  .log { font: 12px/1.5 ui-monospace, Menlo, monospace; background: #0f1b2a; color: #cfe3ff; border-radius: 10px; padding: 10px 12px; margin-top: 18px; max-height: 190px; overflow-y: auto; }
-  .log .s2 { color: #7fd6a4; } .log .s4 { color: #ff9e93; }
+  .formerr { display: none; margin-top: 10px; background: #fbeceb; color: #8f2f27; border-radius: 8px; padding: 8px 10px; font-size: 13px; }
 </style>
 </head>
 <body>
@@ -94,6 +93,7 @@
           <option value="so">Študijné oddelenie</option>
         </select>
         <button class="full" id="podat">Odoslať ticket</button>
+        <div class="formerr" id="formErr"></div>
       </div>
 
       <h3 style="margin:16px 4px 8px;font-size:15px">Moje tickety</h3>
@@ -124,9 +124,6 @@
     </div>
 
     <div id="tickety"></div>
-
-    <div class="sub" style="margin-top:14px">Volania API (posledné hore)</div>
-    <div class="log" id="log"></div>
   </section>
 </main>
 
@@ -145,11 +142,6 @@ function badge(stav) { return `<span class="badge" style="background:var(--${sta
 function cas(iso) { return iso ? new Date(iso).toLocaleString("sk-SK", {day:"numeric",month:"numeric",hour:"2-digit",minute:"2-digit"}) : ""; }
 function adresat(a) { return a.typ === "vyucujuci" ? `vyučujúci ${esc(a.vyucujuciId)}` : "študijné oddelenie"; }
 
-function log(method, path, status) {
-  const el = document.createElement("div");
-  el.innerHTML = `<span class="${status < 400 ? "s2" : "s4"}">${status}</span> ${method} ${esc(path)}`;
-  $("log").prepend(el);
-}
 function toast(msg, ok) {
   const t = $("toast"); t.innerHTML = msg; t.className = ok ? "ok" : "err"; t.style.display = "block";
   clearTimeout(t._h); t._h = setTimeout(() => t.style.display = "none", 4500);
@@ -160,7 +152,6 @@ async function api(token, method, path, body, extraHeaders = {}, quiet = false) 
   if (body) { opts.headers["Content-Type"] = "application/json"; opts.body = JSON.stringify(body); }
   const r = await fetch("/api/v1" + path, opts);
   const data = await r.json().catch(() => ({}));
-  if (!quiet) log(method, "/api/v1" + path, r.status);
   if (!r.ok) {
     let msg = `<b>${r.status} – ${esc(data.title || "Chyba")}</b>`;
     if (data.pravidlo) msg += ` · pravidlo <code>${esc(data.pravidlo)}</code>`;
@@ -173,7 +164,9 @@ async function api(token, method, path, body, extraHeaders = {}, quiet = false) 
 }
 
 // --- študent ---
+const POLE = { predmet: "Predmet", popis: "Popis" };
 $("podat").onclick = async () => {
+  $("formErr").style.display = "none";
   const a = $("adresat").value;
   const body = {
     predmet: $("predmet").value.trim(),
@@ -185,7 +178,13 @@ $("podat").onclick = async () => {
     toast(`Ticket „${esc(t.predmet)}“ bol podaný.`, true);
     $("predmet").value = ""; $("popis").value = "";
     refresh();
-  } catch (e) {}
+  } catch (e) {
+    if (e && e.status === 422) {
+      const ch = (e.chybajuceUdaje || []).map(x => POLE[x.split(".").pop()] || x);
+      $("formErr").textContent = "Vyplň povinné údaje: " + ch.join(", ") + " (pravidlo BR-005).";
+      $("formErr").style.display = "block";
+    }
+  }
 };
 
 async function nacitajStudenta() {
